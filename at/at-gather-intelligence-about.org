@@ -1,0 +1,44 @@
+- Gather intelligence\nabout <physical item> [*] 
+  - Get internal\ndocumentation
+    - Access physically [ah]
+      - Get access to\ndepartment [!]
+      - Enter department [av]
+	- Find document\nstore
+	- Get access to\ndocument store [!]
+	- Obtain paper\ndocuments [!]
+    - Through insider [ov]
+      - Threaten
+      - Blackmail
+      - Bribe
+  - Get inside\nobservations [ah]
+    - Get access to\nthe item [ov]
+      - As visitor
+      - As employee
+    - Record\nobservations [ov]
+      - Steal info [ov]
+	- Documentation
+	- Brochures
+	- Escape plans
+      - Get photos\nor videos
+      - Get voice\nrecordings
+      - Note\nprocedures
+      - Note details
+  - Get outside\nobservations [av]
+    - Record\nobservations [ov]
+      - Get photos\nor videos
+      - Note procedures
+      - Note details
+    - Reach\nproximity
+  - Get info\nonline 
+    - Find leaked\ndocuments [ov]
+      - Search
+      - Buy
+    - Find presentation\ndocuments 
+      - Web server [ov]
+	- Photos
+	- Videos
+	- Brochures
+      - Workshops [ov]
+	- Presentations
+	- Articles
+    - Similar designs
