@@ -1,0 +1,2345 @@
+#+DRAWERS: HIDDEN LINK
+#+TODO: check update extend rewrite write needed? remove working | ok
+#+TAGS: noexport(n)
+#+OPTIONS: H:5 toc:nil author:t creator:nil ^:t timestamps:nil auto-postamble:nil
+#+STYLE:    <link rel="stylesheet" type="text/css" href="org-stylesheet.css"/>
+
+The document below contains common scenarios attack trees as have been
+developed in the EU H2020 [[https://defender-project.eu/][Defender project]]. The common attack trees
+have accompanied the pilot attack trees and used wherever possible to
+describe more common attack parts to be reused in other trees. Some of
+the attack trees were inspired by the book "[[https://www.wiley.com/en-us/Threat+Modeling%253A+Designing+for+Security-p-9781118809990][Threat Modeling: Designing
+for Security]]" by Adam Shostack.
+
+Each attack tree is defined with three sections:
+- Tree: an itemized list of attack tree nodes and definitions to
+  connect and visualize the tree. The Jupyter notebook in the same
+  repository can be used to generate both the graph and the table
+  skeleton
+- Graph: attack tree graph defined as garphviz input file. Org file
+  features are used to run the graphviz on the code within the
+  section. The Jupyter notebook generated graphviz code needs to be
+  sometimes fine tuned to achieve good results on edges
+- Table: initial analysis of the tree with a brief explanation of the
+  node, possible design mitigation, detection and runtime
+  mitigation. Emacs Org mode could be used to export the tables to
+  Word or other document editors.
+
+The following marks are used in the square brackets to describe and
+visualize the tree properly, see examples within the document:
+- !: common scenario root node
+- *: common scenario node (when used in other trees)
+- a: and (between child nodes)
+- o: or (between child nodes, default when not specified)
+- h: align horizontally (default when not specified)
+- v: align vertically
+
+* Attack trees
+** Common Scenarios
+*** Glaze ice
+**** Tree 
+
+- Sleet [ah*]
+  - Rain
+  - Warmer altitude\ntemperature
+  - Very low ground\ntemperature
+
+**** Graph
+
+#+name: at-sleet
+#+header: :file graphs/at-sleet.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+"PSL_0" [style=filled, fillcolor=red, label="Glaze ice", xlabel="PSL\n0"];
+"PSL_1" [label="Rain", xlabel="PSL\n1"];
+"PSL_2" [label="Warmer altitude\ntemperature", xlabel="PSL\n2"];
+"PSL_3" [label="Very low ground\ntemperature", xlabel="PSL\n3"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2";
+"or_0_0" -> "or_0_1" -> "or_0_2" [weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2";}
+{rank=same; "PSL_1", "PSL_2", "PSL_3";}
+"PSL_1" -> "or_0_0" [weight=1000];
+"PSL_2" -> "or_0_1" [weight=100];
+"PSL_3" -> "or_0_2" [weight=100];
+"or_0_1" -> "PSL_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+ }
+ #+END_SRC
+
+ #+RESULTS: at-sleet
+ [[file:graphs/at-sleet.png]]
+
+**** Table
+|-------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node  | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|-------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|       | <30>                           | <30>                           | <30>                           | <30>                           |
+| PSL_0 | Sleet, as a result of three conditions | Raise power line static requirements well above 100 years disaster number. Plan for overloading the lines, build models, prepare prediction models, collect the data on weather, optical line attenuation and power line operational parameters over the years. | Monitor PSL_1, PSL_2 and PSL_3 data on locations and optical and power lines parameters. HITL and social media monitoring can give early signals. | Overload the lines. Send rescue teams to the locations and  work manually to remove the ice. |
+|-------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Set explosion
+**** Tree
+
+- Set explosion <at> [ah*]
+  - Get explosive [ov]
+    - Buy
+    - Steal
+    - Make
+  - Install explosive
+  - Activate explosive [ov]
+    - Remotely
+    - On site
+
+**** Graph
+#+name: at-set-explosion
+#+header: :file graphs/at-set-explosion.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+"PSE_0" [style=filled, fillcolor=red, label="Set explosion <at>", xlabel="PSE\n0"];
+"PSE_1" [label="Get explosive", xlabel="PSE\n1"];
+"PSE_1.1" [label="Buy", xlabel="PSE\n1.1"];
+"PSE_1.2" [label="Steal", xlabel="PSE\n1.2"];
+"PSE_1.3" [label="Make", xlabel="PSE\n1.3"];
+"PSE_2" [label="Install explosive", xlabel="PSE\n2"];
+"PSE_3" [label="Activate explosive", xlabel="PSE\n3"];
+"PSE_3.1" [label="Remotely", xlabel="PSE\n3.1"];
+"PSE_3.2" [label="On site", xlabel="PSE\n3.2"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2";
+"or_0_0" -> "or_0_1" -> "or_0_2" [weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2";}
+{rank=same; "PSE_1", "PSE_2", "PSE_3";}
+"PSE_1" -> "or_0_0" [weight=700];
+"PSE_2" -> "or_0_1" [weight=100];
+"PSE_3" -> "or_0_2" [weight=100];
+"or_0_1" -> "PSE_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1_0", "or_1_1", "or_1_2";
+"or_1_0" -> "or_1_1" -> "or_1_2" [style=dashed, weight=100];
+{rank=same; "PSE_1.1", "or_1_0";}
+{rank=same; "PSE_1.2", "or_1_1";}
+{rank=same; "PSE_1.3", "or_1_2";}
+"PSE_1.1" -> "or_1_0" [style=dashed, weight=100];
+"PSE_1.2" -> "or_1_1" [style=dashed, weight=100];
+"PSE_1.3" -> "or_1_2" [style=dashed, weight=100];
+"or_1_2" -> "PSE_1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_3" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3_0", "or_3_1";
+"or_3_0" -> "or_3_1" [style=dashed, weight=100];
+{rank=same; "PSE_3.1", "or_3_0";}
+{rank=same; "PSE_3.2", "or_3_1";}
+"PSE_3.1" -> "or_3_0" [style=dashed, weight=100];
+"PSE_3.2" -> "or_3_1" [style=dashed, weight=100];
+"or_3_1" -> "PSE_3" [dir=full, arrowhead=normal, weight=1000];
+}
+
+}
+#+END_SRC
+
+ #+RESULTS: at-set-explosion
+ [[file:graphs/at-set-explosion.png]]
+
+**** Table
+|---------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node    | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|---------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|         | <30>                           | <30>                           | <30>                           | <30>                           |
+| PSE+0   | Set explosion <at>             | Regulate the explosive lifecycle process. Control access to the critical assets. Plan for disaster and recovery. | Detect conditions and anomalies in explosives lifecycle process. Detect access to assets and anomalies in acces or use. Detect failure conditions and explosion consequences. | Alert proper team (security, technical, police, first responders) and respond promtly. |
+| PSE+1   | Get explosive                  | Regulate the explosive lifecycle process. | Police and security forces focus on posible possession and misuse. Follow production, storing, market, usage and disposal of the problematic goods. Detect conditions and anomalies in lifecycle process. | Alert the police, respond promptly. |
+| PSE+1.1 | Buy                            | Regulate selling the explosives. | Follow explosives production facilities, selling channels and analyse anomalies in production or market. | Alert on malicious activities, confiscate the goods. |
+| PSE+1.2 | Steal                          | Regulate storing of the explosives and alarming when break in happens. | Inventory checking, burglar alarms and detection systems, internal controls. Control usage and disposal of the explosives. | Alert the police, respond promptly. |
+| PSE+1.3 | Make                           | Know the art of explosive making, regulate the market if necessary. | Follow selling of problematic goods, detect possibly critical conditions, detect anomalies. Police and security forces focus on posible possession and misuse. | Alert the police, respond promptly. |
+| PSE+2   | Install explosive              | Control access to the critical assets. | Access control events detection, burglar alarms, security cameras in the field. Detect access to the assets, anomalies in the access or use. | Alert security and technical teams, start mitigating possible service blackout. Alert the police, respond promptly. |
+| PSE+3   | Activate explosive             | Plan for a disaster.           | Detect power or optical network service failure. Detect detonation sound, light and ground shaking. Utilize HITL and social media. | Alert security and technical teams, start mitigating service blackout. Alert first responders. |
+| PSE+3.1 | Remotely                       | Use jamming systems.           | Detect communication.          | Jam the communication.         |
+| PSE+3.2 | On site                        | Control access to the critical assets. | Access control events detection, burglar alarms, security cameras in the field. Detect access to the assets, anomalies in the access or use. | Alert security and technical teams and the police. |
+|---------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Obtain <physical credentials> 
+**** Tree
+- Obtain\n<physical credentials> [*]
+  - Social engineer
+  - Apply for
+  - Extort
+  - Falsify
+  - Duplicate
+  - Steal
+
+**** Graph 
+#+name: at-obtain-physical-credentials
+#+header: :file graphs/at-obtain-physical-credentials.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+
+"POPC_0" [style=filled, fillcolor=red, label="Obtain\n<physical credentials>", xlabel="POPC\n0"];
+"POPC_1" [label="Social engineer", xlabel="POPC\n1"];
+"POPC_2" [label="Apply for", xlabel="POPC\n2"];
+"POPC_3" [label="Extort", xlabel="POPC\n3"];
+"POPC_4" [label="Falsify", xlabel="POPC\n4"];
+"POPC_5" [label="Duplicate", xlabel="POPC\n5"];
+"POPC_6" [label="Steal", xlabel="POPC\n6"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2", "or_0_3", "or_0_4", "or_0_5", "or_0_6";
+"or_0_0" -> "or_0_1" -> "or_0_2" -> "or_0_3" -> "or_0_4" -> "or_0_5" -> "or_0_6" [style=dashed, weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2", "or_0_3", "or_0_4", "or_0_5", "or_0_6";}
+{rank=same; "POPC_1", "POPC_2", "POPC_3", "POPC_4", "POPC_5", "POPC_6";}
+"POPC_1" -> "or_0_0" [style=dashed, weight=1000];
+"POPC_2" -> "or_0_1" [style=dashed, weight=100];
+"POPC_3" -> "or_0_2" [style=dashed, weight=100];
+"POPC_4" -> "or_0_4" [style=dashed, weight=100];
+"POPC_5" -> "or_0_5" [style=dashed, weight=100];
+"POPC_6" -> "or_0_6" [style=dashed, weight=100];
+"or_0_3" -> "POPC_0" [dir=full, arrowhead=normal, weight=1000];
+}
+}
+#+END_SRC
+
+ #+RESULTS: at-obtain-physical-credentials
+ [[file:graphs/at-obtain-physical-credentials.png]]
+
+**** Table
+
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node   | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|        | <30>                           | <30>                           | <30>                           | <30>                           |
+| POPC+0 | Obtain\n<physical credentials> | Educate personnel. Improve credential lifecycle management procedures. | Detect anomalies in use. Spot falsification or missing credentials | Alarm security team, limit or block assets at compromised sections. Recover or disable the credentials. |
+| POPC+1 | Social engineer                | Educate personnel.             | Detect anomalies in use.       | -II-                           |
+| POPC+2 | Apply for                      | Improve procedures.            | -II-                           | -II -                          |
+| POPC+3 | Extort                         | Educate personnel and prepare procedures. | -II-                           | -II-                           |
+| POPC+4 | Falsify                        | Improve credential design to prevent falsification. Educate personnel what are proper credentials. | Detect anomalies in use. Spot falsification when presented. | -II-                           |
+| POPC+5 | Duplicate                      | Improve credential design to prevent duplication. Educate personnel how to handle the credentials. | Detect anomalies in use.       | -II-                           |
+| POPC+6 | Steal                          | Educate personnel on proper credential procedures. | Detect anomalies in use. Detect missing credentials. | -II-                           |
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Gather intelligence about <physical item> 
+**** Tree
+
+- Gather intelligence\nabout <physical item> [*] 
+  - Get internal\ndocumentation
+    - Access physically [ah]
+      - Get access to\ndepartment [!]
+      - Enter department [av]
+	- Find document\nstore
+	- Get access to\ndocument store [!]
+	- Obtain paper\ndocuments [!]
+    - Through insider [ov]
+      - Threaten
+      - Blackmail
+      - Bribe
+  - Get inside\nobservations [ah]
+    - Get access to\nthe item [ov]
+      - As visitor
+      - As employee
+    - Record\nobservations [ov]
+      - Steal info [ov]
+	- Documentation
+	- Brochures
+	- Escape plans
+      - Get photos\nor videos
+      - Get voice\nrecordings
+      - Note\nprocedures
+      - Note details
+  - Get outside\nobservations [av]
+    - Record\nobservations [ov]
+      - Get photos\nor videos
+      - Note procedures
+      - Note details
+    - Reach\nproximity
+  - Get info\nonline 
+    - Find leaked\ndocuments [ov]
+      - Search
+      - Buy
+    - Find presentation\ndocuments 
+      - Web server [ov]
+	- Photos
+	- Videos
+	- Brochures
+      - Workshops [ov]
+	- Presentations
+	- Articles
+    - Similar designs
+**** Graph 
+#+name: at-gather-intelligence-II
+#+header: :file graphs/at-gather-intelligence-II.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+"POPD_0" [style=filled, fillcolor=red, label="Gather intelligence\nabout <physical item>", xlabel="POPD\n0"];
+"POPD_1" [label="Get internal\ndocumentation", xlabel="POPD\n1"];
+"POPD_1.1" [label="Access physically", xlabel="POPD\n1.1"];
+"POPD_1.1.1" [shape=doubleoctagon, label="Get access to\ndepartment", xlabel="POPD\n1.1.1"];
+"POPD_1.1.2" [label="Enter department", xlabel="POPD\n1.1.2"];
+"POPD_1.1.2.1" [label="Find document\nstore", xlabel="POPD\n1.1.2.1"];
+"POPD_1.1.2.2" [shape=doubleoctagon, label="Get access to\ndocument store", xlabel="POPD\n1.1.2.2"];
+"POPD_1.1.2.3" [shape=doubleoctagon, label="Obtain paper\ndocuments", xlabel="POPD\n1.1.2.3"];
+"POPD_1.2" [label="Through insider", xlabel="POPD\n1.2"];
+"POPD_1.2.1" [label="Threaten", xlabel="POPD\n1.2.1"];
+"POPD_1.2.2" [label="Blackmail", xlabel="POPD\n1.2.2"];
+"POPD_1.2.3" [label="Bribe", xlabel="POPD\n1.2.3"];
+"POPD_2" [label="Get inside\nobservations", xlabel="POPD\n2"];
+"POPD_2.1" [label="Get access to\nthe item", xlabel="POPD\n2.1"];
+"POPD_2.1.1" [label="As visitor", xlabel="POPD\n2.1.1"];
+"POPD_2.1.2" [label="As employee", xlabel="POPD\n2.1.2"];
+"POPD_2.2" [label="Record\nobservations", xlabel="POPD\n2.2"];
+"POPD_2.2.1" [label="Steal info", xlabel="POPD\n2.2.1"];
+"POPD_2.2.1.1" [label="Documentation", xlabel="POPD\n2.2.1.1"];
+"POPD_2.2.1.2" [label="Brochures", xlabel="POPD\n2.2.1.2"];
+"POPD_2.2.1.3" [label="Escape plans", xlabel="POPD\n2.2.1.3"];
+"POPD_2.2.2" [label="Get photos\nor videos", xlabel="POPD\n2.2.2"];
+"POPD_2.2.3" [label="Get voice\nrecordings", xlabel="POPD\n2.2.3"];
+"POPD_2.2.4" [label="Note\nprocedures", xlabel="POPD\n2.2.4"];
+"POPD_2.2.5" [label="Note details", xlabel="POPD\n2.2.5"];
+"POPD_3" [label="Get outside\nobservations", xlabel="POPD\n3"];
+"POPD_3.1" [label="Record\nobservations", xlabel="POPD\n3.1"];
+"POPD_3.1.1" [label="Get photos\nor videos", xlabel="POPD\n3.1.1"];
+"POPD_3.1.2" [label="Note procedures", xlabel="POPD\n3.1.2"];
+"POPD_3.1.3" [label="Note details", xlabel="POPD\n3.1.3"];
+"POPD_3.2" [label="Reach\nproximity", xlabel="POPD\n3.2"];
+"POPD_4" [label="Get info\nonline", xlabel="POPD\n4"];
+"POPD_4.1" [label="Find leaked\ndocuments", xlabel="POPD\n4.1"];
+"POPD_4.1.1" [label="Search", xlabel="POPD\n4.1.1"];
+"POPD_4.1.2" [label="Buy", xlabel="POPD\n4.1.2"];
+"POPD_4.2" [label="Find presentation\ndocuments", xlabel="POPD\n4.2"];
+"POPD_4.2.1" [label="Web server", xlabel="POPD\n4.2.1"];
+"POPD_4.2.1.1" [label="Photos", xlabel="POPD\n4.2.1.1"];
+"POPD_4.2.1.2" [label="Videos", xlabel="POPD\n4.2.1.2"];
+"POPD_4.2.1.3" [label="Brochures", xlabel="POPD\n4.2.1.3"];
+"POPD_4.2.2" [label="Workshops", xlabel="POPD\n4.2.2"];
+"POPD_4.2.2.1" [label="Presentations", xlabel="POPD\n4.2.2.1"];
+"POPD_4.2.2.2" [label="Articles", xlabel="POPD\n4.2.2.2"];
+"POPD_4.3" [label="Similar designs", xlabel="POPD\n4.3"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2", "or_0_3", "or_0_4";
+"or_0_0" -> "or_0_1" -> "or_0_2" -> "or_0_3" -> "or_0_4" [style=dashed, weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2", "or_0_3", "or_0_4";}
+{rank=same; "POPD_1", "POPD_2", "POPD_3", "POPD_4";}
+"POPD_1" -> "or_0_0" [style=dashed, weight=200];
+"POPD_2" -> "or_0_1" [style=dashed, weight=200];
+"POPD_3" -> "or_0_3" [style=dashed, weight=200];
+"POPD_4" -> "or_0_4" [style=dashed, weight=200];
+"or_0_2" -> "POPD_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1_0", "or_1_1", "or_1_2";
+"or_1_0" -> "or_1_1" -> "or_1_2" [style=dashed, weight=100];
+{rank=same; "or_1_0", "or_1_1", "or_1_2";}
+{rank=same; "POPD_1.1", "POPD_1.2";}
+"POPD_1.1" -> "or_1_0" [style=dashed, weight=200];
+"POPD_1.2" -> "or_1_2" [style=dashed, weight=200];
+"or_1_1" -> "POPD_1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1.1" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1.1_0", "or_1.1_1", "or_1.1_2";
+"or_1.1_0" -> "or_1.1_1" -> "or_1.1_2" [weight=100];
+{rank=same; "or_1.1_0", "or_1.1_1", "or_1.1_2";}
+{rank=same; "POPD_1.1.1", "POPD_1.1.2";}
+"POPD_1.1.1" -> "or_1.1_0" [weight=200];
+"POPD_1.1.2" -> "or_1.1_2" [weight=200];
+"or_1.1_1" -> "POPD_1.1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1.1.2" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1.1.2_0", "or_1.1.2_1", "or_1.1.2_2";
+"or_1.1.2_0" -> "or_1.1.2_1" -> "or_1.1.2_2" [weight=700];
+{rank=same; "POPD_1.1.2.1", "or_1.1.2_0";}
+{rank=same; "POPD_1.1.2.2", "or_1.1.2_1";}
+{rank=same; "POPD_1.1.2.3", "or_1.1.2_2";}
+"POPD_1.1.2.1" -> "or_1.1.2_0" [weight=200];
+"POPD_1.1.2.2" -> "or_1.1.2_1" [weight=200];
+"POPD_1.1.2.3" -> "or_1.1.2_2" [weight=200];
+"or_1.1.2_2" -> "POPD_1.1.2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1.2" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1.2_0", "or_1.2_1", "or_1.2_2";
+"or_1.2_0" -> "or_1.2_1" -> "or_1.2_2" [style=dashed, weight=700];
+{rank=same; "POPD_1.2.1", "or_1.2_0";}
+{rank=same; "POPD_1.2.2", "or_1.2_1";}
+{rank=same; "POPD_1.2.3", "or_1.2_2";}
+"POPD_1.2.1" -> "or_1.2_0" [style=dashed, weight=200];
+"POPD_1.2.2" -> "or_1.2_1" [style=dashed, weight=200];
+"POPD_1.2.3" -> "or_1.2_2" [style=dashed, weight=200];
+"or_1.2_2" -> "POPD_1.2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2_0", "or_2_1", "or_2_2";
+"or_2_0" -> "or_2_1" -> "or_2_2" [weight=100];
+{rank=same; "or_2_0", "or_2_1", "or_2_2";}
+{rank=same; "POPD_2.1", "POPD_2.2";}
+"POPD_2.1" -> "or_2_0" [weight=200];
+"POPD_2.2" -> "or_2_2" [weight=200];
+"or_2_1" -> "POPD_2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2.1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2.1_0", "or_2.1_1";
+"or_2.1_0" -> "or_2.1_1" [style=dashed, weight=700];
+{rank=same; "POPD_2.1.1", "or_2.1_0";}
+{rank=same; "POPD_2.1.2", "or_2.1_1";}
+"POPD_2.1.1" -> "or_2.1_0" [style=dashed, weight=200];
+"POPD_2.1.2" -> "or_2.1_1" [style=dashed, weight=200];
+"or_2.1_1" -> "POPD_2.1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2.2" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2.2_0", "or_2.2_1", "or_2.2_2", "or_2.2_3", "or_2.2_4";
+"or_2.2_0" -> "or_2.2_1" -> "or_2.2_2" -> "or_2.2_3" -> "or_2.2_4" [style=dashed, weight=700];
+{rank=same; "POPD_2.2.1", "or_2.2_0";}
+{rank=same; "POPD_2.2.2", "or_2.2_1";}
+{rank=same; "POPD_2.2.3", "or_2.2_2";}
+{rank=same; "POPD_2.2.4", "or_2.2_3";}
+{rank=same; "POPD_2.2.5", "or_2.2_4";}
+"POPD_2.2.1" -> "or_2.2_0" [style=dashed, weight=200];
+"POPD_2.2.2" -> "or_2.2_1" [style=dashed, weight=200];
+"POPD_2.2.3" -> "or_2.2_2" [style=dashed, weight=200];
+"POPD_2.2.4" -> "or_2.2_3" [style=dashed, weight=200];
+"POPD_2.2.5" -> "or_2.2_4" [style=dashed, weight=200];
+"or_2.2_4" -> "POPD_2.2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2.2.1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2.2.1_0", "or_2.2.1_1", "or_2.2.1_2";
+"or_2.2.1_0" -> "or_2.2.1_1" -> "or_2.2.1_2" [style=dashed, weight=700];
+{rank=same; "POPD_2.2.1.1", "or_2.2.1_0";}
+{rank=same; "POPD_2.2.1.2", "or_2.2.1_1";}
+{rank=same; "POPD_2.2.1.3", "or_2.2.1_2";}
+"POPD_2.2.1.1" -> "or_2.2.1_0" [style=dashed, weight=200];
+"POPD_2.2.1.2" -> "or_2.2.1_1" [style=dashed, weight=200];
+"POPD_2.2.1.3" -> "or_2.2.1_2" [style=dashed, weight=200];
+"or_2.2.1_2" -> "POPD_2.2.1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_3" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3_0", "or_3_1";
+"or_3_0" -> "or_3_1" [weight=700];
+{rank=same; "POPD_3.1", "or_3_0";}
+{rank=same; "POPD_3.2", "or_3_1";}
+"POPD_3.1" -> "or_3_0" [weight=200];
+"POPD_3.2" -> "or_3_1" [weight=200];
+"or_3_1" -> "POPD_3" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_3.1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3.1_0", "or_3.1_1", "or_3.1_2";
+"or_3.1_0" -> "or_3.1_1" -> "or_3.1_2" [style=dashed, weight=700];
+{rank=same; "POPD_3.1.1", "or_3.1_0";}
+{rank=same; "POPD_3.1.2", "or_3.1_1";}
+{rank=same; "POPD_3.1.3", "or_3.1_2";}
+"POPD_3.1.1" -> "or_3.1_0" [style=dashed, weight=200];
+"POPD_3.1.2" -> "or_3.1_1" [style=dashed, weight=200];
+"POPD_3.1.3" -> "or_3.1_2" [style=dashed, weight=200];
+"or_3.1_2" -> "POPD_3.1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_4" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_4_0", "or_4_1", "or_4_2";
+"or_4_0" -> "or_4_1" -> "or_4_2" [style=dashed, weight=300];
+{rank=same; "or_4_0", "or_4_1", "or_4_2";}
+{rank=same; "POPD_4.1", "POPD_4.2", "POPD_4.3";}
+"POPD_4.1" -> "or_4_0" [style=dashed, weight=200];
+"POPD_4.2" -> "or_4_1" [style=dashed, weight=300];
+"POPD_4.3" -> "or_4_2" [style=dashed, weight=200];
+"or_4_1" -> "POPD_4" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_4.1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_4.1_0", "or_4.1_1";
+"or_4.1_0" -> "or_4.1_1" [style=dashed, weight=700];
+{rank=same; "POPD_4.1.1", "or_4.1_0";}
+{rank=same; "POPD_4.1.2", "or_4.1_1";}
+"POPD_4.1.1" -> "or_4.1_0" [style=dashed, weight=200];
+"POPD_4.1.2" -> "or_4.1_1" [style=dashed, weight=200];
+"or_4.1_1" -> "POPD_4.1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_4.2" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_4.2_0", "or_4.2_1", "or_4.2_2";
+"or_4.2_0" -> "or_4.2_1" -> "or_4.2_2" [style=dashed, weight=100];
+{rank=same; "or_4.2_0", "or_4.2_1", "or_4.2_2";}
+{rank=same; "POPD_4.2.1", "POPD_4.2.2";}
+"POPD_4.2.1" -> "or_4.2_0" [style=dashed, weight=200];
+"POPD_4.2.2" -> "or_4.2_2" [style=dashed, weight=200];
+"or_4.2_1" -> "POPD_4.2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_4.2.1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_4.2.1_0", "or_4.2.1_1", "or_4.2.1_2";
+"or_4.2.1_0" -> "or_4.2.1_1" -> "or_4.2.1_2" [style=dashed, weight=700];
+{rank=same; "POPD_4.2.1.1", "or_4.2.1_0";}
+{rank=same; "POPD_4.2.1.2", "or_4.2.1_1";}
+{rank=same; "POPD_4.2.1.3", "or_4.2.1_2";}
+"POPD_4.2.1.1" -> "or_4.2.1_0" [style=dashed, weight=200];
+"POPD_4.2.1.2" -> "or_4.2.1_1" [style=dashed, weight=200];
+"POPD_4.2.1.3" -> "or_4.2.1_2" [style=dashed, weight=200];
+"or_4.2.1_2" -> "POPD_4.2.1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_4.2.2" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_4.2.2_0", "or_4.2.2_1";
+"or_4.2.2_0" -> "or_4.2.2_1" [style=dashed, weight=700];
+{rank=same; "POPD_4.2.2.1", "or_4.2.2_0";}
+{rank=same; "POPD_4.2.2.2", "or_4.2.2_1";}
+"POPD_4.2.2.1" -> "or_4.2.2_0" [style=dashed, weight=200];
+"POPD_4.2.2.2" -> "or_4.2.2_1" [style=dashed, weight=200];
+"or_4.2.2_1" -> "POPD_4.2.2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+}
+#+END_SRC
+
+#+RESULTS: at-gather-intelligence-II
+[[file:graphs/at-gather-intelligence-II.png]]
+
+**** Table
+
+|--------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node         | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|--------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|              | <30>                           | <30>                           | <30>                           | <30>                           |
+| PGIA+0       | Gather intelligence about <physical item> | Initiate life-cycle management of sensitive information and procedures. Define organisational policies and procedures for their protection. Harden access to the sensitive assets. Educate employees. | Active physical security supported with advanced technology. Involve employees, be proactive on checking of leaked information. | Utilize security team.         |
+| PGIA+1       | Get internal documentation     | Harden access to the assets. Educate personnel. Have clear organisation policies and procedures. | Detect anomalies in use. Entrance inspection, video control, various sensor detectors, HITL. Check archives regualry. | Alarm security team, limit or block assets capabilities at compromised sections. Recover or disable the credentials. |
+| PGIA+1.1     | Access physically              | Harden access, improve operational procedures. Educate personnel. | Detect anomalies in use. Entrance inspection, video control, various sensor detectors, HITL. | Alarm security team, limit or block assets capabilities at compromised sections. Recover or disable the credentials. |
+| PGIA+1.1.1   | Get access to department       | Harden department access, improve operational procedures. Educate personnel. | Detect anomalies in use. Entrance inspection, video control, various sensor detectors, HITL. | Alarm security team, limit or block assets capabilities at compromised sections. Recover or disable the credentials. |
+| PGIA+1.1.2   | Enter department               | /                              | Detect entering the department, video detection, motion sensors, weight sensors. | Alarm security team.           |
+| PGIA+1.1.2.1 | Find document store            | Use non-exposive labeling of the closets, stores. | /                              | /                              |
+| PGIA+1.1.2.2 | Get access to document store   | Harden department store, improve operational procedures. Educate personnel. | Detect anomalies in use. Entrance inspection, video control, various sensor detectors, HITL. | Alarm security team, limit or block assets capabilities at compromised sections. Recover or disable the credentials. |
+| PGIA+1.1.2.3 | Obtain paper\ndocuments from\nthe store | Improve organisational and security procedures. Prevent unauthorized copying. | Detect anomalies and check the archives regularly. | Alarm security team.           |
+| PGIA+1.2     | Through insider                | Have clear organisational procedures regarding the threat. | Detect anomalous behaviour. Be in conntact with employees. | Alarm security team, contact police. |
+| PGIA+1.2.1   | Threaten                       | Have clear organisational procedures regarding the threat. | Detect anomalous behaviour. Be in conntact with employees. | Alarm security team, contact police. |
+| PGIA+1.2.2   | Blackmail                      | Have clear organisational procedures regarding the threat. | Detect anomalous behaviour. Be in conntact with employees. | Alarm security team, contact police. |
+| PGIA+1.2.3   | Bribe                          | Have clear organisational procedures regarding the threat. | Detect anomalous behaviour. Be in conntact with employees. | Alarm security team, contact police. |
+| PGIA+2       | Get inside observations        | Initiate life-cycle management of sensitive information and procedures. Define organisational policies and procedures for visits. Define employee policies and codex. Work on policies enforcement. | Control visits and sensitive information. Detect anomalies. | Alarm security team.           |
+| PGIA+2.1     | Get access to the item         | Organization policy and procedures are in place. | Video cotrol following (but has privacy issues). | Alarm security team.           |
+| PGIA+2.1.1   | As visitor                     | Have clear organisation policy and procedures for visitors. | Video cotrol following (but has privacy issues). | Alarm security team.           |
+| PGIA+2.1.2   | As employee                    | Have clear employee policies and codex. Educate employees. | Video cotrol following (but has privacy issues). | Alarm security team.           |
+| PGIA+2.2     | Record observations            | Improve and enforce organization policies and procedures. | Control the visits, controll access to sensitive information. Detect anomalies. | Alarm security team.           |
+| PGIA+2.2.1   | Steal info                     | Improve organization policies and procedures how to handle visits and employees access to the documentation. | Control the visits, access control sensitive documentation for the employees. Detect anomalous behaviour. | Alarm security team.           |
+| PGIA+2.2.2   | Get photos or videos           | Improve organization policies and procedures how to handle visits, prevent smart phone usage. Educate employees. | Control the visits.            | Alarm security team.           |
+| PGIA+2.2.3   | Get voice recordings           | Improve organization policies and procedures how to handle visits, prevent smart phone usage. Educate employees. | Control the visits.            | Alarm security team.           |
+| PGIA+2.2.4   | Note procedures                | Improve organization policies and procedures how to handle visits, sensitive procedures should be protected and not exposed. Collect procedures and rank them. | /                              | /                              |
+| PGIA+2.2.5   | Note details                   | Improve organization policies and procedures how to handle visits, sensitive ditails should be protected and not exposed. | Control the visits.            | Alarm security team            |
+| PGIA+3       | Get outside observations       | Improve organisational procedures, control the proximity. Prohibit taking photos or video on close proximity. | Detect anomalous behaviour, security personnel or on sensors (video, LIDAR, etc.), HITL. | Alarm security team.           |
+| PGIA+3.1     | Record observations            | Prohibit taking photos or video on close proximity. | Detect malicious behaviour, security personnel or on sensors (video), HITL. | Alarm security team.           |
+| PGIA+3.1.1   | Get photos or videos           | Prohibit taking photos or video on close proximity. | Detect malicious behaviour, security personnel or on sensors (video), HITL. | Alarm security team.           |
+| PGIA+3.1.2   | Note procedures                | /                              | /                              | /                              |
+| PGIA+3.1.3   | Note details                   | /                              | /                              | /                              |
+| PGIA+3.2     | Reach proximity                | Improve organisational procedures, control the proximity. | Detect anomalous behaviour, security personnel or on sensors (video, LIDAR, etc.), HITL. | Alarm security team.           |
+| PGIA+4       | Get info online                | Have clear organization policy and organisational procedures what can be published and what can be accessed from the outside. | Know the channels, check and search for documents periodically. | Alarm security team, brief responsible personnel. |
+| PGIA+4.1     | Find leaked documents          | Have clear organization policy. | Know the channels, check and search for leaked documents periodically. | Alarm security team.           |
+| PGIA+4.1.1   | Search                         | Have clear organization policy what can be published and what can be accessed from the outside. Search for documentation periodically. | Search for documentation periodically. | Alarm security team.           |
+| PGIA+4.1.2   | Buy                            | Have clear organization policy. | Know the channels, check periodically. | Alarm security team.           |
+| PGIA+4.2     | Find presentation documents    | Have clear organization policy and organisational procedures what can be published and what can be accessed from the outside. | Search for documentation periodically. | Alarm security team.           |
+| PGIA+4.3     | Similar designs                | Know similar designs           | Search for documentation periodically. | Brief responsible personnel.   |
+|--------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Break into <room or building>
+**** Tree
+- Break into\n<room or building> [ah*]
+  - Bring tools
+  - Use tools to
+    - Break through wall
+    - Break through roof
+    - Break through basement
+    - Enter through\nwindow [ov]
+      - Open window [av]
+	- Cut glass
+	- Turn handle
+      - Break window
+    - Enter through\ndoor [ov]
+      - Pick lock
+      - Break door
+    - Enter through\nventilation
+
+**** Graph
+#+name: at-break-into
+#+header: :file graphs/at-break-into.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+"PBIR_0" [style=filled, fillcolor=red, label="Break into\n<room or building>", xlabel="PBIR\n0"];
+"PBIR_1" [label="Bring tools", xlabel="PBIR\n1"];
+"PBIR_2" [label="Use tools to", xlabel="PBIR\n2"];
+"PBIR_2.1" [label="Break through wall", xlabel="PBIR\n2.1"];
+"PBIR_2.2" [label="Break through roof", xlabel="PBIR\n2.2"];
+"PBIR_2.3" [label="Break through basement", xlabel="PBIR\n2.3"];
+"PBIR_2.4" [label="Enter through\nwindow", xlabel="PBIR\n2.4"];
+"PBIR_2.4.1" [label="Open window", xlabel="PBIR\n2.4.1"];
+"PBIR_2.4.1.1" [label="Cut glass", xlabel="PBIR\n2.4.1.1"];
+"PBIR_2.4.1.2" [label="Turn handle", xlabel="PBIR\n2.4.1.2"];
+"PBIR_2.4.2" [label="Break window", xlabel="PBIR\n2.4.2"];
+"PBIR_2.5" [label="Enter through\ndoor", xlabel="PBIR\n2.5"];
+"PBIR_2.5.1" [label="Pick lock", xlabel="PBIR\n2.5.1"];
+"PBIR_2.5.2" [label="Break door", xlabel="PBIR\n2.5.2"];
+"PBIR_2.6" [label="Enter through\nventilation", xlabel="PBIR\n2.6"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2";
+"or_0_0" -> "or_0_1" -> "or_0_2" [weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2";}
+{rank=same; "PBIR_1", "PBIR_2";}
+"PBIR_1" -> "or_0_0" [weight=100];
+"PBIR_2" -> "or_0_2" [weight=100];
+"or_0_1" -> "PBIR_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2_0", "or_2_1", "or_2_2", "or_2_3", "or_2_4", "or_2_5", "or_2_6";
+"or_2_0" -> "or_2_1" -> "or_2_2" -> "or_2_3" -> "or_2_4" -> "or_2_5" -> "or_2_6" [style=dashed, weight=100];
+{rank=same; "or_2_0", "or_2_1", "or_2_2", "or_2_3", "or_2_4", "or_2_5", "or_2_6";}
+{rank=same; "PBIR_2.1", "PBIR_2.2", "PBIR_2.3", "PBIR_2.4", "PBIR_2.5", "PBIR_2.6";}
+"PBIR_2.1" -> "or_2_0" [style=dashed, weight=700];
+"PBIR_2.2" -> "or_2_1" [style=dashed, weight=100];
+"PBIR_2.3" -> "or_2_2" [style=dashed, weight=100];
+"PBIR_2.4" -> "or_2_4" [style=dashed, weight=100];
+"PBIR_2.5" -> "or_2_5" [style=dashed, weight=100];
+"PBIR_2.6" -> "or_2_6" [style=dashed, weight=100];
+"or_2_3" -> "PBIR_2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2.4" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2.4_0", "or_2.4_1";
+"or_2.4_0" -> "or_2.4_1" [style=dashed, weight=100];
+{rank=same; "PBIR_2.4.1", "or_2.4_0";}
+{rank=same; "PBIR_2.4.2", "or_2.4_1";}
+"PBIR_2.4.1" -> "or_2.4_0" [style=dashed, weight=100];
+"PBIR_2.4.2" -> "or_2.4_1" [style=dashed, weight=100];
+"or_2.4_1" -> "PBIR_2.4" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2.4.1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2.4.1_0", "or_2.4.1_1";
+"or_2.4.1_0" -> "or_2.4.1_1" [weight=100];
+{rank=same; "PBIR_2.4.1.1", "or_2.4.1_0";}
+{rank=same; "PBIR_2.4.1.2", "or_2.4.1_1";}
+"PBIR_2.4.1.1" -> "or_2.4.1_0" [weight=100];
+"PBIR_2.4.1.2" -> "or_2.4.1_1" [weight=100];
+"or_2.4.1_1" -> "PBIR_2.4.1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2.5" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2.5_0", "or_2.5_1";
+"or_2.5_0" -> "or_2.5_1" [style=dashed, weight=100];
+{rank=same; "PBIR_2.5.1", "or_2.5_0";}
+{rank=same; "PBIR_2.5.2", "or_2.5_1";}
+"PBIR_2.5.1" -> "or_2.5_0" [style=dashed, weight=100];
+"PBIR_2.5.2" -> "or_2.5_1" [style=dashed, weight=100];
+"or_2.5_1" -> "PBIR_2.5" [dir=full, arrowhead=normal, weight=1000];
+}
+
+}
+#+END_SRC
+
+#+RESULTS: at-break-into
+[[file:graphs/at-break-into.png]]
+
+**** Table 
+|--------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node         | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|--------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|              | <30>                           | <30>                           | <30>                           | <30>                           |
+| PBIR+0       | Break into\n<room or building> | Harden room and building, improve operational procedures | Entrance inspection, video control, various sensor detectors, HITL. | Alarm security team. Lock down building/room capabilities. |
+| PBIR+1       | Bring tools                    | Operational procedures improvements, regulate what can be brought into/near the premises. | Entrance inspection.           | Alarm security team.           |
+| PBIR+2       | Use tools to                   | Harden room and building.     | Video control, various sensor detectors, HITL. | Alarm security team. Lock down building/room capabilities. |
+| PBIR+2.1     | Break through wall             | Harden walls.                 | Video control, detection. HITL. | -II-                           |
+| PBIR+2.2     | Break through roof             | Harden roof, install detectors. | Video control, detection. Motion sensors, window sensors. HITL. | -II-                           |
+| PBIR+2.3     | Break through basement         | Harden basement walls, entrance and windows. | -II-                           | -II-                           |
+| PBIR+2.4     | Enter through\nwindow          | Harden window, add locks.     |                                | -II-                           |
+| PBIR+2.4.1   | Open window                    | Harden window, add locks.     | Window open/break detectors.   | -II-                           |
+| PBIR+2.4.1.1 | Cut glass                      | Harden glass, install detectors. | -II-                           | -II-                           |
+| PBIR+2.4.1.2 | Turn handle                    | Put locks on handles.          | -II-                           | -II-                           |
+| PBIR+2.4.2   | Break window                   | Harden glass, install detectors. | -II-                           | -II-                           |
+| PBIR+2.5     | Enter through\ndoor            | Harden doors.                 | Door open/break detectors.     | -II-                           |
+| PBIR+2.5.1   | Pick lock                      | Install better locks.          | Door open/break detectors.     | -II-                           |
+| PBIR+2.5.2   | Break door                     | Harden door to be more crowbar resistant. | Door open/break detectors.     | -II-                           |
+| PBIR+2.6     | Enter through\nventilation     | Harden ventilation entrance.  | Video control, detection. Motion sensors. HITL. | -II-                           |
+|--------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Get into <room or building>
+**** Tree
+- Get into\n<room or building> [*]
+  - Get access credentials
+    - Granted access
+    - Obtain physical\ncredentials [!]
+  - Break into\n<room or building> [!]
+
+**** Graph
+#+name: at-get-into
+#+header: :file graphs/at-get-into.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+"PGIR_0" [style=filled, fillcolor=red, label="Get into\n<room or building>", xlabel="PGIR\n0"];
+"PGIR_1" [label="Get access credentials", xlabel="PGIR\n1"];
+"PGIR_1.1" [label="Granted access", xlabel="PGIR\n1.1"];
+"PGIR_1.2" [shape=doubleoctagon, label="Obtain physical\ncredentials", xlabel="PGIR\n1.2"];
+"PGIR_2" [shape=doubleoctagon, label="Break into\n<room or building>", xlabel="PGIR\n2"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2";
+"or_0_0" -> "or_0_1" -> "or_0_2" [style=dashed, weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2";}
+{rank=same; "PGIR_1", "PGIR_2";}
+"PGIR_1" -> "or_0_0" [style=dashed, weight=100];
+"PGIR_2" -> "or_0_2" [style=dashed, weight=100];
+"or_0_1" -> "PGIR_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1_0", "or_1_1", "or_1_2";
+"or_1_0" -> "or_1_1" -> "or_1_2" [style=dashed, weight=100];
+{rank=same; "or_1_0", "or_1_1", "or_1_2";}
+{rank=same; "PGIR_1.1", "PGIR_1.2";}
+"PGIR_1.1" -> "or_1_0" [style=dashed, weight=100];
+"PGIR_1.2" -> "or_1_2" [style=dashed, weight=100];
+"or_1_1" -> "PGIR_1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+}
+#+END_SRC
+
+#+RESULTS: at-get-into
+[[file:graphs/at-get-into.png]]
+
+**** Table 
+|----------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node     | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|----------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|          | <30>                           | <30>                           | <30>                           | <30>                           |
+| PGIR+0   | Get into\n<room or building>   | Harden room or building, improve operational procedures. Educate personnel. | Detect anomalies in use. Entrance inspection, video control, various sensor detectors, HITL. | Alarm security team, limit or block assets capabilities at compromised sections. Recover or disable the credentials. |
+| PGIR+1   | Get access credentials         | Educate personnel. Improve credential lifecycle procedures. | Detect anomalies in use. Spot falsification or missing credentials. | Alarm security team, limit or block assets at compromised sections. Recover or disable the credentials. |
+| PGIR+1.1 | Granted access                 | Educate personnel. Improve credential lifecycle procedures. | Detect anomalies in use.       | Alarm security team, disable the credentials. |
+| PGIR+1.2 | Obtain\n<physical credentials> | Educate personnel. Improve credential lifecycle procedures. | Detect anomalies in use. Spot falsification or missing credentials. | Alarm security team, limit or block assets at compromised sections. Recover or disable the credentials. |
+| PGIR+2   | Break into\n<room or building> | Harden room and building, improve operational procedures | Entrance inspection, video control, various sensor detectors, HITL. | Alarm security team. Lock down building/room capabilities. |
+|----------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Get into <site region>
+**** Tree
+- Get into <site region> [*]
+  - Go through main door [ov]
+    - Pass the guard [ov]
+      - Social engeener [!]
+      - Disable guard
+      - Bribe
+    - Posses credentials
+    - Obtaing physical\ncredentials [!]
+  - Over the fence [ov]
+    - Climbe over
+    - Jump
+  - Through the fence [ov]
+    - Cut the fence
+    - Trash the fence
+  - Below the fence [ov]
+    - Raise the fence
+    - Dig a tunnel
+
+**** Graph
+#+name: at-get-into-site-region
+#+header: :file graphs/at-get-into-site-region.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+"PGSR_0" [style=filled, fillcolor=red, label="Get into <site region>", xlabel="PGSR\n0"];
+"PGSR_1" [label="Go through main door", xlabel="PGSR\n1"];
+"PGSR_1.1" [label="Pass the guard", xlabel="PGSR\n1.1"];
+"PGSR_1.1.1" [shape=doubleoctagon, label="Social engeener", xlabel="PGSR\n1.1.1"];
+"PGSR_1.1.2" [label="Disable guard", xlabel="PGSR\n1.1.2"];
+"PGSR_1.1.3" [label="Bribe", xlabel="PGSR\n1.1.3"];
+"PGSR_1.2" [label="Possess credentials", xlabel="PGSR\n1.2"];
+"PGSR_1.3" [shape=doubleoctagon, label="Obtain physical\ncredentials", xlabel="PGSR\n1.3"];
+"PGSR_2" [label="Over the fence", xlabel="PGSR\n2"];
+"PGSR_2.1" [label="Climb over", xlabel="PGSR\n2.1"];
+"PGSR_2.2" [label="Jump", xlabel="PGSR\n2.2"];
+"PGSR_3" [label="Through the fence", xlabel="PGSR\n3"];
+"PGSR_3.1" [label="Cut the fence", xlabel="PGSR\n3.1"];
+"PGSR_3.2" [label="Trash the fence", xlabel="PGSR\n3.2"];
+"PGSR_4" [label="Below the fence", xlabel="PGSR\n4"];
+"PGSR_4.1" [label="Raise the fence", xlabel="PGSR\n4.1"];
+"PGSR_4.2" [label="Dig a tunnel", xlabel="PGSR\n4.2"];
+"PGSR_5" [label="Through natural\npassages", xlabel="PGSR\n5"];
+"PGSR_5.1" [label="Drains", xlabel="PGSR\n5.1"];
+"PGSR_5.2" [label="Ventilation", xlabel="PGSR\n5.2"];
+"PGSR_5.3" [label="Water pipes", xlabel="PGSR\n5.3"];
+"PGSR_5.4" [label="Caves", xlabel="PGSR\n5.4"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2", "or_0_3", "or_0_4";
+"or_0_0" -> "or_0_1" -> "or_0_2" -> "or_0_3" -> "or_0_4" [style=dashed, weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2", "or_0_3", "or_0_4";}
+{rank=same; "PGSR_1", "PGSR_2", "PGSR_3", "PGSR_4", "PGSR_5";}
+"PGSR_1" -> "or_0_0" [style=dashed, weight=700];
+"PGSR_2" -> "or_0_1" [style=dashed, weight=100];
+"PGSR_3" -> "or_0_2" [style=dashed, weight=100];
+"PGSR_4" -> "or_0_3" [style=dashed, weight=100];
+"PGSR_5" -> "or_0_4" [style=dashed, weight=700];
+"or_0_2" -> "PGSR_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1_0", "or_1_1", "or_1_2";
+"or_1_0" -> "or_1_1" -> "or_1_2" [style=dashed, weight=100];
+{rank=same; "PGSR_1.1", "or_1_0";}
+{rank=same; "PGSR_1.2", "or_1_1";}
+{rank=same; "PGSR_1.3", "or_1_2";}
+"PGSR_1.1" -> "or_1_0" [style=dashed, weight=100];
+"PGSR_1.2" -> "or_1_1" [style=dashed, weight=100];
+"PGSR_1.3" -> "or_1_2" [style=dashed, weight=100];
+"or_1_2" -> "PGSR_1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1.1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1.1_0", "or_1.1_1", "or_1.1_2";
+"or_1.1_0" -> "or_1.1_1" -> "or_1.1_2" [style=dashed, weight=100];
+{rank=same; "PGSR_1.1.1", "or_1.1_0";}
+{rank=same; "PGSR_1.1.2", "or_1.1_1";}
+{rank=same; "PGSR_1.1.3", "or_1.1_2";}
+"PGSR_1.1.1" -> "or_1.1_0" [style=dashed, weight=100];
+"PGSR_1.1.2" -> "or_1.1_1" [style=dashed, weight=100];
+"PGSR_1.1.3" -> "or_1.1_2" [style=dashed, weight=100];
+"or_1.1_2" -> "PGSR_1.1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2_0", "or_2_1";
+"or_2_0" -> "or_2_1" [style=dashed, weight=100];
+{rank=same; "PGSR_2.1", "or_2_0";}
+{rank=same; "PGSR_2.2", "or_2_1";}
+"PGSR_2.1" -> "or_2_0" [style=dashed, weight=100];
+"PGSR_2.2" -> "or_2_1" [style=dashed, weight=100];
+"or_2_1" -> "PGSR_2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_3" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3_0", "or_3_1";
+"or_3_0" -> "or_3_1" [style=dashed, weight=100];
+{rank=same; "PGSR_3.1", "or_3_0";}
+{rank=same; "PGSR_3.2", "or_3_1";}
+"PGSR_3.1" -> "or_3_0" [style=dashed, weight=100];
+"PGSR_3.2" -> "or_3_1" [style=dashed, weight=100];
+"or_3_1" -> "PGSR_3" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_4" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_4_0", "or_4_1";
+"or_4_0" -> "or_4_1" [style=dashed, weight=100];
+{rank=same; "PGSR_4.1", "or_4_0";}
+{rank=same; "PGSR_4.2", "or_4_1";}
+"PGSR_4.1" -> "or_4_0" [style=dashed, weight=100];
+"PGSR_4.2" -> "or_4_1" [style=dashed, weight=100];
+"or_4_1" -> "PGSR_4" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_5" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_5_0", "or_5_1", "or_5_2", "or_5_3";
+"or_5_0" -> "or_5_1" -> "or_5_2" -> "or_5_3" [style=dashed, weight=100];
+{rank=same; "PGSR_5.1", "or_5_0";}
+{rank=same; "PGSR_5.2", "or_5_1";}
+{rank=same; "PGSR_5.3", "or_5_2";}
+{rank=same; "PGSR_5.4", "or_5_3";}
+"PGSR_5.1" -> "or_5_0" [style=dashed, weight=100];
+"PGSR_5.2" -> "or_5_1" [style=dashed, weight=100];
+"PGSR_5.3" -> "or_5_2" [style=dashed, weight=100];
+"PGSR_5.4" -> "or_5_3" [style=dashed, weight=100];
+"or_5_3" -> "PGSR_5" [dir=full, arrowhead=normal, weight=1000];
+}
+
+}
+#+END_SRC
+
+#+RESULTS: at-get-into-site-region
+[[file:graphs/at-get-into-site-region.png]]
+
+**** Table 
+
+|------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node       | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|            | <30>                           | <30>                           | <30>                           | <30>                           |
+| PGSR+0     | Get into <site region>         | Educate employees. Define strict organisational policies. Install sensors. Improve credential lifecycle management procedures. Harden access passages to the site. Istall mitigation mechanisms. | Manual inspection, utilize various sensors. Detect anomalies in access and usage. | Alarm security team.           |
+| PGSR+1     | Go through main door           | Educate employees. Define strict organisational policies. Install sensors. | Use video sensors. Utilize HITL. Detect anomalies. | Alarm security team.           |
+| PGSR+1.1   | Pass the guard                 | Educate employees. Define strict organisational policies. Install sensors. | Use video sensors. Utilize HITL. Detect anomalies. | Alarm security team.           |
+| PGSR+1.1.1 | Social engeener                | Educate employees. Define strict organisational policies. Install sensors. | Use video sensors. Utilize HITL. Detect anomalies. | Alarm security team.           |
+| PGSR+1.1.2 | Disable guard                  | Educate employees. Define strict organisational policies. Install sensors. | Use video sensors. Utilize HITL. Detect anomalies. | Alarm security team.           |
+| PGSR+1.1.3 | Bribe                          | Educate employees. Define strict organisational policies. Install sensors. | Detect anomalies in access control an video/(LIDAR, motion. line)) sensors. | Alarm security team.           |
+| PGSR+1.2   | Posses credentials             | Educate employees. Define strict organisational policies. Install sensors. | Detect anomalies in credentials usage. | Alarm security team.           |
+| PGSR+1.3   | Obtaing physical credentials   | Educate personnel. Improve credential lifecycle management procedures. | Detect anomalies in use. Spot falsification or missing credentials | Alarm security team, limit or block assets at compromised sections. Recover or disable the credentials. |
+| PGSR+2     | Over the fence                 | Raise the fence, harden the top and access to the fence. Install sensors. | Manual inspection, utilize line, video or LIDAR sensors and HITL. | Alarm security team.           |
+| PGSR+2.1   | Climbe over                    | Raise the fence, harden the top (razor wire, broken glass, etc.) | Manual inspection, utilize line, video or LIDAR sensors and HITL. | Alarm security team.           |
+| PGSR+2.2   | Jump over, from the tree, higher ground, etc. | Raise the fence, harden access. Install sensors. | Manual inspection, utilize line, video or LIDAR sensors and HITL. | Alarm security team.           |
+| PGSR+3     | Through the fence              | Harden the fence. Install sensors. | Manual inspection, utilize vibration, seizmic, line, LIDAR or video sensors and HITL. | Alarm security team.           |
+| PGSR+3.1   | Cut the fence                  | Harden the fence. Install sensors. | Manual inspection, utilize vibration, seizmic, line, LIDAR or video sensors and HITL. | Alarm security team.           |
+| PGSR+3.2   | Trash the fence, for example with a car, buldozer, etc. | Harden the fence. Install sensors. | Manual inspection, utilize vibration, seizmic, line, LIDAR or video sensors and HITL. | Alarm security team.           |
+| PGSR+4     | Below the fence                | Harden the fence base and foundations. Electricify the fence. Install sensors. | Manual inspection, utilize vibration, seizmic, line, LIDAR or video sensors and HITL. | Alarm security team.           |
+| PGSR+4.1   | Raise the fence                | Harden the fence base. Electricify the fence. Install sensors. | Fence vibration or line sensors. Manual inspection, advanced video analytics. | Alarm security team.           |
+| PGSR+4.2   | Dig a tunnel                   | Harden the fence foundations. Install sensors. | Manual inspection. Utilize seizmic or sound sensors. | Alarm security team.           |
+| PGSR+5     | Through natural passages       | Harden the passages. Install sensors controlling access. | Manual inspection. Utilize motion, line or video sensors. | Alarm security team.           |
+| PGSR+5.1   | Drains                         | Harden the drains passage. Install sensors. | Manual inspection. Utilize motion, line or video sensors. | Alarm security team.           |
+| PGSR+5.2   | Ventilation                    | Harden the ventilation passage. Install sensors. | Manual inspection. Utilize motion, line or video sensors. | Alarm security team.           |
+| PGSR+5.3   | Water pipes                    | Harden the pipe passage. Install sensors. | Manual inspection. Utilize motion, line or video sensors. | Alarm security team.           |
+| PGSR+5.4   | Caves                          | Know location specifics, research surronding, use electrical resistivity tomography (ERT). Harden the passage. Install sensors. | Manual inspection. Utilize motion, line or video sensors. | Alarm security team.           |
+|------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Obtain paper documents <from documents store>
+**** Tree
+
+- Obtain paper\ndocuments <from documents\nstore> [ah*] 
+  - Get documents [ov]
+    - Take documents
+    - Copy documents
+  - Find documents
+  - Find documents store
+
+**** Graph
+#+name: at-obtain-paper-documents
+#+header: :file graphs/at-obtain-paper-documents.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+
+"POPD_0" [style=filled, fillcolor=red, label="Obtain paper\ndocuments <from\ndocuments store>", xlabel="POPD\n0"];
+"POPD_1" [label="Get documents", xlabel="POPD\n1"];
+"POPD_1.1" [label="Take documents", xlabel="POPD\n1.1"];
+"POPD_1.2" [label="Copy documents", xlabel="POPD\n1.2"];
+"POPD_2" [label="Find documents ", xlabel="POPD\n2"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2";
+"or_0_0" -> "or_0_1" -> "or_0_2" [weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2";}
+{rank=same; "POPD_1", "POPD_2";}
+"POPD_1" -> "or_0_0" [weight=200];
+"POPD_2" -> "or_0_2" [weight=200];
+"or_0_1" -> "POPD_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1_0", "or_1_1";
+"or_1_0" -> "or_1_1" [style=dashed, weight=700];
+{rank=same; "POPD_1.1", "or_1_0";}
+{rank=same; "POPD_1.2", "or_1_1";}
+"POPD_1.1" -> "or_1_0" [style=dashed, weight=200];
+"POPD_1.2" -> "or_1_1" [style=dashed, weight=200];
+"or_1_1" -> "POPD_1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+}
+#+END_SRC
+
+#+RESULTS: at-obtain-paper-documents
+[[file:graphs/at-obtain-paper-documents.png]]
+
+**** Table
+
+|------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node       | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| <10>       | <30>                           | <30>                           | <30>                           | <30>                           |
+| POPD+0     | Obtain paper documents         | Improve organisational and security procedures. Prevent unauthorized copying. | Detect anomalies and check the archives regularly. | Alarm security team.           |
+| POPD+1     | Get documents                  | Improve organisational procedures. Prevent unauthorized copying. | Detect anomalies and check the archives regularly. | Alarm security team.           |
+| POPD+1.1   | Take documents                 | Improve organisational procedures, control number of copies, don't store all the documentation in same place. | Regular check of documentation. | Alarm security team.           |
+| POPD+1.2   | Copy documents                 | Prevent unauthorized copying.  | Detect anomalies in use.       | Alarm security team.           |
+| POPD+2     | Find documents                 | Label conservative, maintain organized random order. | Check order of the documents, detect changes | Alarm security team.           |
+|------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Obtain sensitive data from site
+**** Tree
+
+- Obtain sensitive\ndata [*]
+  - Digital data [ov]
+    - Get disks 
+    - Take laptops\nor computer
+    - Take backups 
+    - Get media (USB/CD)
+  - Paper documents
+    - Obtain paper\ndocuments [!]
+    - Get exposed\ndocuments [ov]
+      - Site plans
+      - Escape plans
+      - Shift list
+      - Operational plans
+
+**** Graph 
+#+name: at-obtain-sensitive-data
+#+header: :file graphs/at-obtain-sensitive-data.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+"POSD_0" [style=filled, fillcolor=red, label="Obtain sensitive\ndata", xlabel="POSD\n0"];
+"POSD_1" [label="Digital data", xlabel="POSD\n1"];
+"POSD_1.1" [label="Get disks", xlabel="POSD\n1.1"];
+"POSD_1.2" [label="Take laptops\nor computer", xlabel="POSD\n1.2"];
+"POSD_1.3" [label="Take backups", xlabel="POSD\n1.3"];
+"POSD_1.4" [label="Get media (USB/CD)", xlabel="POSD\n1.4"];
+"POSD_2" [label="Paper documents", xlabel="POSD\n2"];
+"POSD_2.1" [shape=doubleoctagon, label="Obtain paper\ndocuments", xlabel="POSD\n2.1"];
+"POSD_2.2" [label="Get exposed\ndocuments", xlabel="POSD\n2.2"];
+"POSD_2.2.1" [label="Site plans", xlabel="POSD\n2.2.1"];
+"POSD_2.2.2" [label="Escape plans", xlabel="POSD\n2.2.2"];
+"POSD_2.2.3" [label="Shift list", xlabel="POSD\n2.2.3"];
+"POSD_2.2.4" [label="Operational plans", xlabel="POSD\n2.2.4"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2";
+"or_0_0" -> "or_0_1" -> "or_0_2" [style=dashed, weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2";}
+{rank=same; "POSD_1", "POSD_2";}
+"POSD_1" -> "or_0_0" [style=dashed, weight=200];
+"POSD_2" -> "or_0_2" [style=dashed, weight=200];
+"or_0_1" -> "POSD_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1" {
+# Vertical
+node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_1_0", "or_1_1", "or_1_2", "or_1_3";
+"or_1_0" -> "or_1_1" -> "or_1_2" -> "or_1_3" [style=dashed, weight=700];
+{rank=same; "POSD_1.1", "or_1_0";}
+{rank=same; "POSD_1.2", "or_1_1";}
+{rank=same; "POSD_1.3", "or_1_2";}
+{rank=same; "POSD_1.4", "or_1_3";}
+"POSD_1.1" -> "or_1_0" [style=dashed, weight=200];
+"POSD_1.2" -> "or_1_1" [style=dashed, weight=200];
+"POSD_1.3" -> "or_1_2" [style=dashed, weight=200];
+"POSD_1.4" -> "or_1_3" [style=dashed, weight=200];
+"or_1_3" -> "POSD_1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2" {
+# Horizontal
+node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_2_0", "or_2_1", "or_2_2";
+"or_2_0" -> "or_2_1" -> "or_2_2" [style=dashed, weight=100];
+{rank=same; "or_2_0", "or_2_1", "or_2_2";}
+{rank=same; "POSD_2.1", "POSD_2.2";}
+"POSD_2.1" -> "or_2_0" [style=dashed, weight=200];
+"POSD_2.2" -> "or_2_2" [style=dashed, weight=200];
+"or_2_1" -> "POSD_2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2.2" {
+# Vertical
+node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_2.2_0", "or_2.2_1", "or_2.2_2", "or_2.2_3";
+"or_2.2_0" -> "or_2.2_1" -> "or_2.2_2" -> "or_2.2_3" [style=dashed, weight=700];
+{rank=same; "POSD_2.2.1", "or_2.2_0";}
+{rank=same; "POSD_2.2.2", "or_2.2_1";}
+{rank=same; "POSD_2.2.3", "or_2.2_2";}
+{rank=same; "POSD_2.2.4", "or_2.2_3";}
+"POSD_2.2.1" -> "or_2.2_0" [style=dashed, weight=200];
+"POSD_2.2.2" -> "or_2.2_1" [style=dashed, weight=200];
+"POSD_2.2.3" -> "or_2.2_2" [style=dashed, weight=200];
+"POSD_2.2.4" -> "or_2.2_3" [style=dashed, weight=200];
+"or_2.2_3" -> "POSD_2.2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+}
+ #+END_SRC
+
+#+RESULTS: at-obtain-sensitive-data
+[[file:graphs/at-obtain-sensitive-data.png]]
+
+**** Table
+
+
+|------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node       | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| <10>       | <30>                           | <30>                           | <30>                           | <30>                           |
+| POSD+0     | Obtain sensitive data          | Improve organizational policies and procedures. Encrypt data at rest, backup regulary. Prevent unauthorized copying. Keep sensitive data at hand but locked and covered. Keep list of digital media and computers. | Check for missing data media regulary, detect anomalies in their usage. Control visits. | Alarm security team.           |
+| POSD+1     | Digital data                   | Improve access control policies and procedures. Encrypt data at rest, backup regulary. Keep list of digital media and computers. | Check media, backups and computer systems regulary. | -II-                           |
+| POSD+1.1   | Get disks                      | Encrypt disks at rest, make backups regulary and check restore procedures. | /                              | -II-                           |
+| POSD+1.2   | Take laptops or computer       | Promote good passwords and strong authentication. Encrypt disks at rest, make backups regulary and check restore procedures. Safe-lock laptops and computers. Keep list of computers. | Check computers and laptops regulary. | -II-                           |
+| POSD+1.3   | Take backups                   | Encrypt backups, store at safe place, not at site. Keep list of backups. | Check backups regulary.        | -II-                           |
+| POSD+1.4   | Get media (USB/CD)             | Encrypt data on media. Keep list of media. | Check media at the site regulary. | -II-                           |
+| POSD+2     | Paper documents                | Improve organisational and security procedures. Prevent unauthorized copying. Keep sensitive data at hand but locked and covered. | Detect anomalies and check for missing documents regularly. Control visits | -II-                           |
+| POSD+2.1   | Obtain paper documents         | Improve organisational and security procedures. Prevent unauthorized copying. | Detect anomalies and check the archives regularly. | -II-                           |
+| POSD+2.2   | Get exposed documents          | Keep at hand but covered, locked. Improve organization policies and procedures regarding the documents and visits. | Check missing documents, control visits. | -II-                           |
+| POSD+2.2.1 | Site plans                     | -II-                           | -II-                           | -II-                           |
+| POSD+2.2.2 | Escape plans                   | Expose minimal information, needed for escape and first response. Improve organization policies and procedures. | -II-                           | -II-                           |
+| POSD+2.2.3 | Shift list                     | Keep at hand but covered, locked. Improve organization policies and procedures regarding the documents and visits. | -II-                           | -II-                           |
+| POSD+2.2.4 | Operational plans              | -II-                           | -II-                           | -II-                           |
+|------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Get a drone
+**** Tree
+
+- Get a drone [oh*]
+  - Buy online [av]
+    - Look online
+    - Purchase
+  - Build [av]
+    - Buy parts
+    - Assemble
+  - Steal [ov]
+    - From military
+    - From police
+    - From commercial\ncompanies
+  - Find
+**** Graph 
+#+name: at-get-a-drone
+#+header: :file graphs/at-get-a-drone.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+"PGDR_0" [style=filled, fillcolor=red, label="Get drone", xlabel="PGDR\n0"];
+"PGDR_1" [label="Buy online", xlabel="PGDR\n1"];
+"PGDR_1.1" [label="Look online", xlabel="PGDR\n1.1"];
+"PGDR_1.2" [label="Purchase", xlabel="PGDR\n1.2"];
+"PGDR_2" [label="Build", xlabel="PGDR\n2"];
+"PGDR_2.1" [label="Buy parts", xlabel="PGDR\n2.1"];
+"PGDR_2.2" [label="Assemble", xlabel="PGDR\n2.2"];
+"PGDR_3" [label="Steal", xlabel="PGDR\n3"];
+"PGDR_3.1" [label="From military", xlabel="PGDR\n3.1"];
+"PGDR_3.2" [label="From police", xlabel="PGDR\n3.2"];
+"PGDR_3.3" [label="From commercial\ncompanies", xlabel="PGDR\n3.3"];
+"PGDR_4" [label="Find", xlabel="PGDR\n4"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2", "or_0_3", "or_0_4";
+"or_0_0" -> "or_0_1" -> "or_0_2" -> "or_0_3" -> "or_0_4" [style=dashed, weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2", "or_0_3", "or_0_4";}
+{rank=same; "PGDR_1", "PGDR_2", "PGDR_3", "PGDR_4";}
+"PGDR_1" -> "or_0_0" [style=dashed, weight=200];
+"PGDR_2" -> "or_0_1" [style=dashed, weight=200];
+"PGDR_3" -> "or_0_3" [style=dashed, weight=200];
+"PGDR_4" -> "or_0_4" [style=dashed, weight=200];
+"or_0_2" -> "PGDR_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1_0", "or_1_1";
+"or_1_0" -> "or_1_1" [weight=700];
+{rank=same; "PGDR_1.1", "or_1_0";}
+{rank=same; "PGDR_1.2", "or_1_1";}
+"PGDR_1.1" -> "or_1_0" [weight=200];
+"PGDR_1.2" -> "or_1_1" [weight=200];
+"or_1_1" -> "PGDR_1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2_0", "or_2_1";
+"or_2_0" -> "or_2_1" [weight=700];
+{rank=same; "PGDR_2.1", "or_2_0";}
+{rank=same; "PGDR_2.2", "or_2_1";}
+"PGDR_2.1" -> "or_2_0" [weight=200];
+"PGDR_2.2" -> "or_2_1" [weight=200];
+"or_2_1" -> "PGDR_2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_3" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3_0", "or_3_1", "or_3_2";
+"or_3_0" -> "or_3_1" -> "or_3_2" [style=dashed, weight=700];
+{rank=same; "PGDR_3.1", "or_3_0";}
+{rank=same; "PGDR_3.2", "or_3_1";}
+{rank=same; "PGDR_3.3", "or_3_2";}
+"PGDR_3.1" -> "or_3_0" [style=dashed, weight=200];
+"PGDR_3.2" -> "or_3_1" [style=dashed, weight=200];
+"PGDR_3.3" -> "or_3_2" [style=dashed, weight=200];
+"or_3_2" -> "PGDR_3" [dir=full, arrowhead=normal, weight=1000];
+}
+
+}
+#+END_SRC
+
+#+RESULTS: at-get-a-drone
+[[file:graphs/at-get-a-drone.png]]
+
+**** Table
+
+
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node            | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| <15>            | <30>                           | <30>                           | <30>                           | <30>                           |
+| PGDR+0          | Get a drone                    | Control the drone market, access to certain drone categories. Clear organisational policies and procedures. Control access to drones at rest and in operation. | Detect anomalies in the market. Check fleet regularly. Follow reports, social media. | Warn security team.            |
+| PGDR+1          | Buy online of-the-shelf drone  | Control the drone market, access to certain drone categories. | Detect anomalies in the market. | /                              |
+| PGDR+1.1        | Look online                    | /                              | /                              | /                              |
+| PGDR+1.2        | Purchase                       | Control the drone market, access to certain drone categories. | Detect anomalies in the market. | Warn security team.            |
+| PGDR+2          | Build                          | Know the market, control access to hardware, software or service critical parts, if any. | u.s.                           | u.s                            |
+| PGDR+2.1        | Buy parts                      | Know the market, control access to hardware, software or service critical parts, if any. | u.s.                           | u.s.                           |
+| PGDR+2.2        | Assemble                       | /                              | /                              | /                              |
+| PGDR+3          | Steal                          | Clear organisational policies and procedures. Control access to drones at rest and in operation. | Check regualry.                | Alarm security team.           |
+| PGDR+3.1        | From military                  | u.s.                           | u.s.                           | u.s                            |
+| PGDR+3.2        | From police                    | u.s.                           | u.s.                           | u.s                            |
+| PGDR+3.3        | From commercial                | u.s.                           | u.s.                           | u.s                            |
+| PGDR+4          | Find                           | Don't lose drones. Make them hard to reuse without internal knowledge. Buil-in self destructive features. Define organisation policies and procedures. | Follow reports, social media.  | Warn security team.            |
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Fine tune drone
+**** Tree
+
+- Fine tune\ndrone [ah*]
+  - Remove limitations [ov]
+    - For speed
+    - Avoid return\nhome distance
+    - Hight limit
+    - Regulation wise
+  - Reduce noise
+  - Protective\npaint
+
+**** Graph 
+#+name: at-fine-tune-drone
+#+header: :file graphs/at-fine-tune-drone.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+"PFTD_0" [style=filled, fillcolor=red, label="Fine tune\ndrone", xlabel="PFTD\n0"];
+"PFTD_1" [label="Remove limitations", xlabel="PFTD\n1"];
+"PFTD_1.1" [label="For speed", xlabel="PFTD\n1.1"];
+"PFTD_1.2" [label="For height", xlabel="PFTD\n1.2"];
+"PFTD_1.3" [label="Avoid return\nhome distance", xlabel="PFTD\n1.3"];
+"PFTD_1.4" [label="Regulation wise", xlabel="PFTD\n1.4"];
+"PFTD_2" [label="Reduce noise", xlabel="PFTD\n2"];
+"PFTD_3" [label="Protective\npaint", xlabel="PFTD\n3"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2";
+"or_0_0" -> "or_0_1" -> "or_0_2" [weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2";}
+{rank=same; "PFTD_1", "PFTD_2", "PFTD_3";}
+"PFTD_1" -> "or_0_0" [weight=200];
+"PFTD_2" -> "or_0_1" [weight=200];
+"PFTD_3" -> "or_0_2" [weight=200];
+"or_0_1" -> "PFTD_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_1" {
+# Horizontal
+node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_1_0", "or_1_1", "or_1_2", "or_1_3", "or_1_4";
+"or_1_0" -> "or_1_1" -> "or_1_2" -> "or_1_3" -> "or_1_4" [style=dashed, weight=100];
+{rank=same; "or_1_0", "or_1_1", "or_1_2", "or_1_3", "or_1_4";}
+{rank=same; "PFTD_1.1", "PFTD_1.2", "PFTD_1.3", "PFTD_1.4";}
+"PFTD_1.1" -> "or_1_0" [style=dashed, weight=200];
+"PFTD_1.2" -> "or_1_1" [style=dashed, weight=200];
+"PFTD_1.3" -> "or_1_3" [style=dashed, weight=200];
+"PFTD_1.4" -> "or_1_4" [style=dashed, weight=200];
+"or_1_2" -> "PFTD_1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+}
+#+END_SRC
+
+#+RESULTS: at-fine-tune-drone
+[[file:graphs/at-fine-tune-drone.png]]
+
+**** Table
+
+
+
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node            | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| <15>            | <30>                           | <30>                           | <30>                           | <30>                           |
+| PFTD+0          | Fine tune drone                | Increase detection and mitigation methods assumed drone properties for addressed class of drones. Depend on multiple drone detection methods. | /                              | /                              |
+| PFTD+1          | Remove limitations             | Increase detection and mitigation methods assumed drone properties for addressed class of drones. | /                              | /                              |
+| PFTD+1.1        | For speed                      | Design detection and mitigation methods with higher speed limits for addressed class of drones. | /                              | /                              |
+| PFTD+1.2        | For height                     | Design detection and mitigation methods with higher hight limits for addressed class of drones. | /                              | /                              |
+| PFTD+1.3        | Avoid return home distance     | Double the distance for the class of drone addressed. | /                              | /                              |
+| PFTD+1.4        | Regulation wise                | Dont count on limitations that are not cryptograhically secured implemented in hardware. | /                              | /                              |
+| PFTD+2          | Reduce noise                   | Depend on multiple drone detection methods, not only sound. | /                              | /                              |
+| PFTD+3          | Protective paint               | Follow the development. Train video and radar detection models on protective paints. Depend on multiple detection methods, not only visual. | /                              | /                              |
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Prepare a drone with explosive
+**** Tree
+
+- Prepare drone\nwith explosive [ah*]
+  - Get drone [!]
+  - Fine tune\ndrone [!]
+  - Mount explosive\non a drone [ah]
+    - Get explosive [ov]
+      - Buy
+      - Steal
+      - Make
+    - Add detonator [ov]
+      - GSM controlled
+      - Radio controlled
+      - Wi+Fi controlled
+
+**** Graph 
+#+name: at-prepare-drone-with-explosive
+#+header: :file graphs/at-prepare-drone-with-explosive.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+"PDWE_0" [style=filled, fillcolor=red, label="Prepare drone\nwith explosive", xlabel="PDWE\n0"];
+"PDWE_1" [shape=doubleoctagon, label="Get drone", xlabel="PDWE\n1"];
+"PDWE_2" [shape=doubleoctagon, label="Fine tune\ndrone", xlabel="PDWE\n2"];
+"PDWE_3" [label="Mount explosive\non a drone", xlabel="PDWE\n3"];
+"PDWE_3.1" [label="Get explosive", xlabel="PDWE\n3.1"];
+"PDWE_3.1.1" [label="Buy", xlabel="PDWE\n3.1.1"];
+"PDWE_3.1.2" [label="Steal", xlabel="PDWE\n3.1.2"];
+"PDWE_3.1.3" [label="Make", xlabel="PDWE\n3.1.3"];
+"PDWE_3.2" [label="Add detonator", xlabel="PDWE\n3.2"];
+"PDWE_3.2.1" [label="GSM controlled", xlabel="PDWE\n3.2.1"];
+"PDWE_3.2.2" [label="Radio controlled", xlabel="PDWE\n3.2.2"];
+"PDWE_3.2.3" [label="Wi-Fi controlled ", xlabel="PDWE\n3.2.3"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2";
+"or_0_0" -> "or_0_1" -> "or_0_2" [weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2";}
+{rank=same; "PDWE_1", "PDWE_2", "PDWE_3";}
+"PDWE_1" -> "or_0_0" [weight=200];
+"PDWE_2" -> "or_0_1" [weight=200];
+"PDWE_3" -> "or_0_2" [weight=200];
+"or_0_1" -> "PDWE_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_3" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3_0", "or_3_1", "or_3_2";
+"or_3_0" -> "or_3_1" -> "or_3_2" [weight=100];
+{rank=same; "or_3_0", "or_3_1", "or_3_2";}
+{rank=same; "PDWE_3.1", "PDWE_3.2";}
+"PDWE_3.1" -> "or_3_0" [weight=200];
+"PDWE_3.2" -> "or_3_2" [weight=200];
+"or_3_1" -> "PDWE_3" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_3.1" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3.1_0", "or_3.1_1", "or_3.1_2";
+"or_3.1_0" -> "or_3.1_1" -> "or_3.1_2" [style=dashed, weight=700];
+{rank=same; "PDWE_3.1.1", "or_3.1_0";}
+{rank=same; "PDWE_3.1.2", "or_3.1_1";}
+{rank=same; "PDWE_3.1.3", "or_3.1_2";}
+"PDWE_3.1.1" -> "or_3.1_0" [style=dashed, weight=200];
+"PDWE_3.1.2" -> "or_3.1_1" [style=dashed, weight=200];
+"PDWE_3.1.3" -> "or_3.1_2" [style=dashed, weight=200];
+"or_3.1_2" -> "PDWE_3.1" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_3.2" {
+# Vertical
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3.2_0", "or_3.2_1", "or_3.2_2";
+"or_3.2_0" -> "or_3.2_1" -> "or_3.2_2" [style=dashed, weight=700];
+{rank=same; "PDWE_3.2.1", "or_3.2_0";}
+{rank=same; "PDWE_3.2.2", "or_3.2_1";}
+{rank=same; "PDWE_3.2.3", "or_3.2_2";}
+"PDWE_3.2.1" -> "or_3.2_0" [style=dashed, weight=200];
+"PDWE_3.2.2" -> "or_3.2_1" [style=dashed, weight=200];
+"PDWE_3.2.3" -> "or_3.2_2" [style=dashed, weight=200];
+"or_3.2_2" -> "PDWE_3.2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+}
+#+END_SRC
+
+#+RESULTS: at-prepare-drone-with-explosive
+[[file:graphs/at-prepare-drone-with-explosive.png]]
+
+**** Table
+
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node            | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| <15>            | <30>                           | <30>                           | <30>                           | <30>                           |
+| PDWE_0          | Prepare a drone with explosive | Control the drone market, access to certain drone categories. Clear organisational policies and procedures. Regulate the explosive lifecycle process. Provide systems to control/disable the communication with the detonator. | Detect communication or anomalous behaviour in communication. Detect a drone with a heavy payload. | Proactivly stop the drone with jaming, shot or laser. Alarm security team and first responders. |
+| PDWE_1          | Get drone                      | Control the drone market, access to certain drone categories. Clear organisational policies and procedures. Control access to drones at rest and in operation. | Detect anomalies in the market. Check fleet regularly. Follow reports, social media. | Warn security team.            |
+| PDWE_2          | Fine tune drone                | Increase detection and mitigation methods assumed drone properties for addressed class of drones. Depend on multiple drone detection methods. | /                              | /                              |
+| PDWE_3          | Mount explosive on a drone     | /                              | Detect a drone with a heavy payload. | Proactivly stop the drone with jaming, shot or laser. Alarm security team and first responders. |
+| PDWE_3.1        | Get explosive                  | Regulate the explosive lifecycle process. | Police and security forces focus on posible possession and misuse. Follow production, storing, market, usage and disposal of the problematic goods. Detect conditions and anomalies in explosives lifecycle process. | Alert the police, respond promptly. |
+| PDWE_3.1.1      | Buy                            | Regulate selling the explosives. | Follow explosives production facilities, selling channels and analyse anomalies in production or market. | Alert on malicious activities, confiscate the goods. |
+| PDWE_3.1.2      | Steal                          | Regulate storing of the explosives and alarming when break in happens. | Inventory checking, burglar alarms and detection systems, internal controls. Control usage and disposal of the explosives. | Alert the police, respond promptly. |
+| PDWE_3.1.3      | Make                           | Know the art of explosive making, regulate the market if necessary. | Follow selling of problematic goods, detect possibly critical conditions, detect anomalies. Police and security forces focus on posible possession and misuse. | Alert the police, respond promptly. |
+| PDWE_3.2        | Add detonator                  | Provide systems to control/disable the communication with the detonator. | Detect communication or anomalous behaviour in communication. | Jam pr disable communication.  |
+| PDWE_3.2.1      | GSM controlled                 | Limit or be able to control GSM communication in area. | Control communications, detect anomalous behaviour. | Jam GSM or shut down the communication nodes. |
+| PDWE_3.2.2      | Radio controlled               | Provide radio jamming mitigation systems. | Detect radio communications, detect anomalus behaviour. | Jam radio communication        |
+| PDWE_3.2.3      | Wi-Fi controlled                | Provide Wi-Fi jamming mitigation system. Control close peremiter. | Detect new Wi-Fi access points close to the area. | Jam/DoS Wi-Fi communication,    |
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+*** Fly to destination
+**** Tree 
+
+- Fly to <destination> [ah*]
+  - Launch drone
+  - Navigate
+    - Operate by remote [ov]
+    - Fly on plan
+  - Avoid obstackes
+**** Graph 
+#+name: at-fly-to-destination
+#+header: :file graphs/at-fly-to-destination.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+edge [dir=none];
+
+"PFTD_0" [style=filled, fillcolor=red, label="Fly to <destination>", xlabel="PFTD\n0"];
+"PFTD_1" [label="Launch drone", xlabel="PFTD\n1"];
+"PFTD_2" [label="Navigate", xlabel="PFTD\n2"];
+"PFTD_2.1" [label="Operate by remote", xlabel="PFTD\n2.1"];
+"PFTD_2.2" [label="Fly on plan", xlabel="PFTD\n2.2"];
+"PFTD_3" [label="Avoid obstackes ", xlabel="PFTD\n3"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2";
+"or_0_0" -> "or_0_1" -> "or_0_2" [weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2";}
+{rank=same; "PFTD_1", "PFTD_2", "PFTD_3";}
+"PFTD_1" -> "or_0_0" [weight=200];
+"PFTD_2" -> "or_0_1" [weight=200];
+"PFTD_3" -> "or_0_2" [weight=200];
+"or_0_1" -> "PFTD_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2_0", "or_2_1", "or_2_2";
+"or_2_0" -> "or_2_1" -> "or_2_2" [style=dashed, weight=100];
+{rank=same; "or_2_0", "or_2_1", "or_2_2";}
+{rank=same; "PFTD_2.1", "PFTD_2.2";}
+"PFTD_2.1" -> "or_2_0" [style=dashed, weight=200];
+"PFTD_2.2" -> "or_2_2" [style=dashed, weight=200];
+"or_2_1" -> "PFTD_2" [dir=full, arrowhead=normal, weight=1000];
+}
+    
+}
+#+END_SRC
+
+#+RESULTS: at-fly-to-destination
+[[file:graphs/at-fly-to-destination.png]]
+
+**** Table
+
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node            | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| <15>            | <30>                           | <30>                           | <30>                           | <30>                           |
+| PFTD+0          | Fly to <destination>           | Mechanical and communication based protection systems. Drone vision limiting. Control access in critical assets wide proximity. | Radar or RF link detection. Acustic sensors. Video detection of a drone, tracking. HITL. | Launch available protection system, alarm the security team. |
+| PFTD+1          | Launch drone                   | Control access in critical assets wide proximity. | /                              | /                              |
+| PFTD+2          | Navigate                       | Mechanical and communication based protection systems. Drone vision limiting. | Radar or RF link detection. Acustic sensors. Video detection of a drone, tracking. HITL. | Launch available protection system, alarm the security team. |
+| PFTD+2.1        | Operate by remote              | Prevent flying, hunt, capture, live brids capture systems. Laser or gun based protection system. Operator communication and navigation jamming systems. | -〃-                           | Launch the protection system, alarm the security team. |
+| PFTD+2.2        | Fly on plan                    | Prevent flying, hunt, capture, live brids capture systems. Laser or gun based protection system. Navigation jamming systems. Visibility limiting systems like smoke or radiation emitters. | Radar detection. Acustic sensors. Video detection of a drone, tracking. HITL. | -〃-                           |
+| PFTD+3          | Avoid obstackes                | Protective systems around critical assets like fences. Prevent flying, hunt, capture, live brids capture systems. | Video detection of a drone, tracking. HITL. | -〃-                           |
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+- http://www.thedrive.com/aerial/11505/the-7-most-significant-anti-drone-weapons
+- [[file:~/delo/org/data/projects/Defender/WP1/references/08102043.pdf][Detection, Localization, and Tracking of Unauthorized UAS and Jammers]]
+- [[file:~/delo/org/data/projects/Defender/WP1/references/p17-nguyen-1.pdf][Investigating Cost-effective RF-based Detection of Drones]]
+
+*** Reach area
+**** Tree 
+
+- Reach <area> [*]
+  - By foot
+  - By car
+  - By boat
+**** Graph 
+#+name: at-reach-area
+#+header: :file graphs/at-reach-area.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+edge [dir=none];
+
+"PRA_0" [style=filled, fillcolor=red, label="Reach <area>", xlabel="PRA\n0"];
+"PRA_1" [label="By foot", xlabel="PRA\n1"];
+"PRA_2" [label="By car", xlabel="PRA\n2"];
+"PRA_3" [label="By boat", xlabel="PRA\n3"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2";
+"or_0_0" -> "or_0_1" -> "or_0_2" [style=dashed, weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2";}
+{rank=same; "PRA_1", "PRA_2", "PRA_3";}
+"PRA_1" -> "or_0_0" [style=dashed, weight=200];
+"PRA_2" -> "or_0_1" [style=dashed, weight=200];
+"PRA_3" -> "or_0_2" [style=dashed, weight=200];
+"or_0_1" -> "PRA_0" [dir=full, arrowhead=normal, weight=1000];
+}
+    
+}
+#+END_SRC
+
+#+RESULTS: at-reach-area
+[[file:graphs/at-reach-area.png]]
+
+**** Table
+
+
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node            | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| <15>            | <30>                           | <30>                           | <30>                           | <30>                           |
+| PRA+0           | Reach <area>                   | Know the access routes. Control access to the critical assets. Plan for disaster and recovery. | Monitor criticall assets access routes, detect anomalies. Utilize HITL or employees. | Alarm security team.           |
+| PRA+1           | By foot                        | Control access to the critical assets. Plan for disaster and recovery. | Utilize HITL or employees.     | Alarm security team.           |
+| PRA+2           | By car                         | Know the access routes. Control access to the critical assets. Plan for disaster and recovery. | Monitor criticall assets access routes, detect anomalies. Utilize HITL or employees. | Alarm security team.           |
+| PRA+3           | By boat                        | Know the access over the water. Control access to critical assets like dams. Plan for disaster and recovery. | Utilize video monitoring on access directions, detect anomalies. Utilize HITL or employees. | Alarm security team.           |
+|-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Social engineering 
+**** Tree
+- Social engineer [ah*]
+  - Pose as trustworthy
+  - Backgroung assemble
+    - Acquire information\nin person or\nelectronically
+    - Dumpster diving
+    - Public internet sources
+**** Graph 
+#+name: at-social-engineering
+#+header: :file graphs/at-social-engineering.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+"SE_0" [style=filled, fillcolor=red, label="Social engineer\n<target>", xlabel="SE\n0"];
+"SE_1" [label="Pose as trustworthy", xlabel="SE\n1"];
+"SE_2" [label="Background assemble", xlabel="SE\n2"];
+"SE_2.1" [label="Acquire information\nin person or\nelectronically", xlabel="SE\n2.1"];
+"SE_2.2" [label="Dumpster diving", xlabel="SE\n2.2"];
+"SE_2.3" [label="Public internet\nsources", xlabel="SE\n2.3"];
+
+subgraph "cluster_0" {
+# Horizontal
+node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2";
+"or_0_0" -> "or_0_1" -> "or_0_2" [weight=100];
+{rank=same; "or_0_0", "or_0_1", "or_0_2";}
+{rank=same; "SE_1", "SE_2";}
+"SE_1" -> "or_0_0" [weight=200];
+"SE_2" -> "or_0_2" [weight=200];
+"or_0_1" -> "SE_0" [dir=full, arrowhead=normal, weight=1000];
+}
+
+subgraph "cluster_2" {
+# Horizontal
+node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_2_0", "or_2_1", "or_2_2";
+"or_2_0" -> "or_2_1" -> "or_2_2" [style=dashed, weight=100];
+{rank=same; "or_2_0", "or_2_1", "or_2_2";}
+{rank=same; "SE_2.1", "SE_2.2", "SE_2.3";}
+"SE_2.1" -> "or_2_0" [style=dashed, weight=200];
+"SE_2.2" -> "or_2_1" [style=dashed, weight=200];
+"SE_2.3" -> "or_2_2" [style=dashed, weight=200];
+"or_2_1" -> "SE_2" [dir=full, arrowhead=normal, weight=1000];
+}
+
+}
+#+END_SRC
+
+#+RESULTS: at-social-engineering
+[[file:graphs/at-social-engineering.png]]
+**** Table
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|      | <30>                           | <30>                           | <30>                           | <30>                           |
+| SE1  | Public internet sources        | Define company policies and enforcement, raise employees and contractors awarnes, education | Penetration test               |                                |
+| SE2  | Dumpster diving                | Define company policies and enforcement, raise employees and contractors awarnes, education | Penetration test               |                                |
+| SE3  | Accquire information in person or electronic | Define company policies and enforcement, raise employees and contractors awarnes, education | Penetration test               |                                |
+| SE4  | Background assemble            | Define company policies and enforcement, raise employees and contractors awarnes, education | Penetration test               |                                |
+| SE5  | Pose as trustworthy            | Define company policies and enforcement, raise employees and contractors awarnes, education | Penetration test               |                                |
+| SE6  | Social engineer <target>       | Define company policies and enforcement, raise employees and contractors awarnes, education | Penetration test               |                                |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+*** Obtain password
+**** Tree
+- Obtain password for\n<system function> [oh*]
+  - Crack password
+    - Extract password data [!]
+  - Capture in use, network\nor logger
+    - Access host [!]
+  - Reset password
+  - Obtain, issue or\nreset password
+    - Social engeener user [!]
+  - Blackmail system\nadministrator
+**** Graph 
+#+name: at-obtain-password
+#+header: :file graphs/at-obtain-password.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+ digraph AT {
+   graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+   node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+   edge [dir=none];
+
+   subgraph cluster_0 {
+      OP1 [shape=doubleoctagon, label="Extract password\ndata", xlabel="OP1"];
+      OP2 [shape=doubleoctagon, label="Social engineer user", xlabel="OP2"];
+      OP3 [shape=doubleoctagon, label="Access host", xlabel="OP3"];
+      OP4 [label="Crack password", xlabel="OP4"];
+      OP5 [label="Capture in use, network\n or logger", xlabel="OP5"];
+      OP6 [label="Reset password", xlabel="OP6"];
+      OP7 [label="Obtain, issue or\nreset password", xlabel="OP7"];
+      OP8 [label="Blackmail system\nadministrator", xlabel="OP8"];
+      OP9 [label="Obtain password for\n<system function>", style=filled, fillcolor=red, xlabel="OP9"];
+
+      node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] orOP1, orOP2, orOP3, orOP4, orOP5;
+      { rank = same; orOP1, orOP2, orOP3, orOP4, orOP5; }
+
+      OP1 -> OP4;
+      OP2 -> OP7;
+      OP3 -> OP5;
+
+      orOP1 -> orOP2 -> orOP3 -> orOP4 -> orOP5 [style=dashed];
+      OP4 -> orOP1 [style=dashed, weigth=1000];
+      OP5 -> orOP2 [style=dashed];
+      OP6 -> orOP3 [style=dashed];
+      OP7 -> orOP4 [style=dashed];
+      OP8 -> orOP5 [style=dashed];
+      orOP3 -> OP9 [dir=full, arrowhead=normal, weigth=1000];  
+   }
+ }
+#+END_SRC
+
+#+RESULTS: at-obtain-password
+[[file:graphs/at-obtain-password.png]]
+**** Table
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|      | <30>                           | <30>                           | <30>                           | <30>                           |
+| OP1  | Extract password               | Educate employees and security personnel, access control, policies, enforcement | Intrusion detection, configuration management, atypical behaviour detection | Detect source, isolate, clean and update, store evidence |
+| OP2  | Social engineer user           | Define company policies and enforcement, raise employees and contractors awarnes, education | Penetration test               |                                |
+| OP3  | Deploy malware to\n<network> or <host> | Educate employees and security personnel, usage policies and enforcement mechanisms, proper management | Intrusion detection, antivirus on host and in network, emit events | Block and isolate host or device, store evidence |
+| OP4  | Crack password                 | System allows creation of strong passwords only, user education | Detect atypical logins and entity behaviour | Lock account                   |
+| OP5  | Capture password in plain text in use, through network sniffer or keyboard logger | Don't exchange or store passwords in cleartext, store in memory only with minimal scope, hardened system | Detect atypical logins and entity behaviour, detect sniffer, antivirus | Lock account, remove malware   |
+| OP6  | Reset password                 | Proper procedures for reset, user education, strong security questions | Detect atypical resets         | Lock account                   |
+| OP7  | Obtain, reset old or issue new password through user impersonation | Harden password management procedures, educate personnel | Detect atypical password changes | Lock account                   |
+| OP8  | Blackmail system administrator | Educate personnel               | Detect atypical usage          | Lock account                   |
+| OP9  | Obtain password for <system or function> | Strong passwords, procedures, education, hardened systems | Detect atypical usage, prevent malware | Lock acount, remove malware    |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+*** Obtain credentials for system or function
+**** Tree
+- Obtain credential for <system function> [oh*]
+  - Obtain password [!]
+  - Extract credentials [!]
+  - Steal physical\nauthentication token
+  - Impersonate authorized user [ho]
+    - Social engineer user [!]
+    - Biometrically\nimpersonate
+**** Graph 
+#+name: at-obtain-credentials
+#+header: :file graphs/at-obtain-credentials.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+   subgraph cluster_0 {
+      OC1 [shape=doubleoctagon, label="Obtain password", xlabel="OC1"];
+      OC2 [shape=doubleoctagon, label="Extract credentials", xlabel="OC2"];
+      OC3 [label="Steal physical\nauthentication token", xlabel="OC3"];
+      OC4 [label="Impersonate authorized\nuser", xlabel="OC4"];
+      OC5 [shape=doubleoctagon, label="Social engineer user", xlabel="OC5"];
+      OC6 [label="Biometrically impersonate", xlabel="OC6"];
+      OC7 [label="Obtain credential for\n<system function>", style=filled, fillcolor=red, xlabel="OC7"];
+
+      node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] orOC1, orOC2, orOC3, orOC4, orOC5;
+      { rank = same; orOC1, orOC2, orOC3, orOC4, orOC5; }
+
+      node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] orOC6;
+      {OC5, OC6} -> orOC6 [style=dashed];
+      orOC6 -> OC4 [dir=full, arrowhead=normal];  
+
+      orOC1 -> orOC2 -> orOC3 -> orOC4 -> orOC5 [style=dashed];
+      OC1 -> orOC1 [style=dashed, weigth=1000];
+      OC2 -> orOC2 [style=dashed];
+      OC3 -> orOC4 [style=dashed];
+      OC4 -> orOC5 [style=dashed];
+      orOC3 -> OC7 [dir=full, arrowhead=normal];  
+   }
+}
+#+END_SRC
+
+#+RESULTS: at-obtain-credentials
+[[file:graphs/at-obtain-credentials.png]]
+**** Table
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|      | <30>                           | <30>                           | <30>                           | <30>                           |
+| OC1  | Obtain password for <system or function> | Strong passwords, procedures, education, hardened systems | Detect atypical usage, prevent malware | Lock acount, remove malware    |
+| OC2  | Obtain credentials             | Educate employees and security personnel, access control, policies, enforcement | Intrusion detection, configuration management, atypical behaviour detection | Detect source, isolate, clean and update, store evidence |
+| OC3  | Steal physical authentication token | Multi-factor authentication like pin | Detect atypical usage like double authorization | Rewoke authorizations          |
+| OC4  | Impersonate authorized user    | Improve authorization procedures, define company policies and enforcement, raise employees and contractors awarnes, education |                                |                                |
+| OC5  | Biometric impersonation, forge biometric features | Harden biometric procedures, multi-factor authentication | Detect atypical usage like access time, tasks in operation, order of actions | Rewoke authorizations          |
+| OC6  | Social engeener to impersonate <user> | Define company policies and enforcement, raise employees and contractors awarnes, education | Penetration test               |                                |
+| OC7  | Obtain credential for <system or function> | Improve access control, policies and enforcement, education | Intrusion detection, penetration testing, atypical usage detection | Rewoke authorizations, isolate, clean and update, store evidence |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+*** Deploy malware
+**** Tree
+- Deploy malware to <host> [oh*]
+  - Compromised mobile device
+  - Infected peripherial
+  - Run code on\nclient [!]
+  - Intentional malware install
+**** Graph 
+#+name: at-deploy-malware
+#+header: :file graphs/at-deploy-malware.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+   subgraph cluster_0 {
+      DM1 [label="Compromised mobile\ndevice", xlabel="DM1"];
+      DM2 [label="Infected periperial", xlabel="DM2"];
+      DM3 [shape=doubleoctagon, label="Run code on\nclient", xlabel="DM3"];
+      DM4 [label="Intentional malware\ninstall and run", xlabel="DM4"];
+      DM5 [label="Deploy malware to\n<host>", style=filled, fillcolor=red, xlabel="DM5"];
+
+      node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] orDM1, orDM2, orDM3, orDM4, orDM5;
+      { rank=same; orDM1, orDM2, orDM3, orDM4, orDM5;}
+
+      orDM1 -> orDM2 -> orDM3 -> orDM4 -> orDM5 [style=dashed];
+      DM1 -> orDM1 [style=dashed, weight=1000];
+      DM2 -> orDM2 [style=dashed, weight=1000];
+      DM3 -> orDM4 [style=dashed, weight=1000];
+      DM4 -> orDM5 [style=dashed, weight=1000];
+      orDM3 -> DM5 [dir=full, arrowhead=normal, weight=1000];
+   }
+}
+#+END_SRC
+
+ #+RESULTS: at-deploy-malware
+ [[file:graphs/at-deploy-malware.png]]
+**** Table
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|      | <30>                           | <30>                           | <30>                           | <30>                           |
+| DM1  | Compromised mobile device, connected to internal <network> | Educate employees on paths of infection, create and enforce policy on mobile devices connection to internal network | Test the device for malware before connection, intrusion detection, antivirus | Block and isolate device       |
+| DM2  | Infected periperial, USB, CD, inserted into internal <host> | Educate employees on paths of infection, create and enforce policy on peripherals connection to internal hosts, limit hosts exposability, possibly in hardware | Intrusion detection, antivirus on host and in network, emit events | Block and isolate host         |
+| DM3  | Download or install malware, to internal <host> | Educate employees on risks, harden OS, proper patch management, intrusion detection and antivirus on host | Intrusion detection, antivirus on host and in network, emit events | Block and isolate host         |
+| DM4  | Intentional malware install    | Educate security personnel on risk, harden OS, proper configuration management | Intrusion detection, antivirus in network, emit events | Block and isolate host, store evidence |
+| DM5  | Deploy malware to\n<network> or <host> | Educate employees and security personnel, usage policies and enforcement mechanisms, proper management | Intrusion detection, antivirus on host and in network, emit events | Block and isolate host or device, store evidence |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+*** Reconfigure firewall
+**** Tree
+- Reconfigure firewall [oh!]
+  - Access firewal [!]
+  - Obtain firewall credentials [!]
+  - Intentional firewall\nreconfiguration
+  - Unintentional firewall\nreconfiguration
+**** Graph
+ #+name: at-reconfigure-firewall
+ #+header: :file graphs/at-reconfigure-firewall.png
+ #+BEGIN_SRC dot :cmdline -Kdot -Tpng
+ digraph AT {
+   graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+   node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+   edge [dir=none];
+
+   subgraph cluster_0 {
+      RF1 [shape=doubleoctagon, label="Access firewall", xlabel="RF1"];      
+      RF2 [shape=doubleoctagon, label="Obtain firewall\ncredentials", xlabel="RF2"];
+      RF3 [label="Intentional firewall\nreconfiguration", xlabel="RF3"];
+      RF4 [label="Unintentional firewall\nreconfiguration", xlabel="RF4"];
+      RF5 [label="Reconfigure <firewall>", style=filled, fillcolor=red, xlabel="RF5"];
+      orRF1 [shape=point, width=.001];
+
+      node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] orRF1, orRF2, orRF3, orRF4, orRF5;
+      { rank=same; orRF1, orRF2, orRF3, orRF4, orRF5;}
+
+      orRF1 -> orRF2 -> orRF3 -> orRF4 -> orRF5 [style=dashed];
+      RF1 -> orRF1 [style=dashed, weight=1000];
+      RF2 -> orRF2 [style=dashed];
+      RF3 -> orRF4 [style=dashed];
+      RF4 -> orRF5 [style=dashed];
+      orRF3 -> RF5 [dir=full, arrowhead=normal];
+   }
+ }
+ #+END_SRC
+
+ #+RESULTS: at-reconfigure-firewall
+ [[file:graphs/at-reconfigure-firewall.png]]
+**** Table
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|      | <30>                           | <30>                           | <30>                           | <30>                           |
+| RF1  | Access firewall                | Proper patch management, access control | Intrusion detection, detect atypical communication or host behaviour, configuration changes, anomaly detection, integriity changes | Detect source, isolate, clean and update host |
+| RF2  | Obtain firewall credentials    | Improve access control, policies and enforcement, education | Intrusion detection, penetration testing, atypical usage detection | Rewoke authorizations, isolate, clean and update, store evidence |
+| RF3  | Authorized insider intentionally sets a firewall rule | Configuration management, multiple persons confirm the change | Emit rule changes as events, align with higher authorization decisions | Remove the rule                |
+| RF4  | Authorized employee accidentially applies an explotable rule | Configuration management, multiple persons confirm the change | Emit rule changes as events, align with higher authorization decisions | Remove the rule                |
+| RF5  | Reconfigure <firewall>         | Add firewall                   | Detect new network or subnetwork configurations | Add firewall                   |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+*** Firewall Gap
+**** Tree
+- Firewall gap [oh!]
+  - Misconfigured firewall
+  - Reconfigure firewall [!]
+  - Stale rule
+  - No access control
+**** Graph 
+ #+name: at-exploit-firewall-gap
+ #+header: :file graphs/at-exploit-firewall-gap.png
+ #+BEGIN_SRC dot :cmdline -Kdot -Tpng
+ digraph AT {
+   graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+   node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+   edge [dir=none];
+
+   subgraph cluster_0 {
+     FG1 [label="Misconfigured firewall", xlabel="FG1"];
+     FG2 [shape=doubleoctagon, label="Reconfigure firewall", xlabel="FG2"];
+     FG3 [label="Stale rule", xlabel="FG3"];
+     FG4 [label="No access control", xlabel="FG4"];
+     FG5 [label="<Firewall> gap", style=filled, fillcolor=red, xlabel="FG5"];
+
+     node [shape=point, width=.001] orFG1, orFG2, orFG3, orFG4, orFG5;
+     {rank=same; orFG1, orFG2, orFG3, orFG4, orFG5; }
+
+     orFG1 -> orFG2 -> orFG3 -> orFG4 -> orFG5 [style=dashed];
+     FG1 -> orFG1 [style=dashed, weight=1000];
+     FG2 -> orFG2 [style=dashed, weight=1000];
+     FG3 -> orFG4 [style=dashed, weight=1000];
+     FG4 -> orFG5 [style=dashed, weight=1000];
+     orFG3 -> FG5 [dir=full, arrowhead=normal, weight=1000];
+   }
+ }
+ #+END_SRC
+
+ #+RESULTS: at-exploit-firewall-gap
+ [[file:graphs/at-exploit-firewall-gap.png]]
+**** Table
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|      | <30>                           | <30>                           | <30>                           | <30>                           |
+| FG1  | Misconfigured firewall, rules are missing | Apply deny all, permit allowed design rule. | Intrusion detection, firewall penetration testing | Apply new firewall rule        |
+| FG2  | Reconfigure firewall           |                                |                                |                                |
+| FG3  | Stale rule left after not needed any more | Configuration managemnt, expiration date metadata mandatory, automated rule removal | Penetration testing            | Remove stale rule              |
+| FG4  | No access control              | Add firewall                   | Detect new network or subnetwork configurations | Add firewall                   |
+| FG5  | <Firewall> gap                 | Proper rule design, automated configuration management | Intrusion detection, rule changes detection | Dynamic rule management         |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+*** Access network
+**** Tree
+- Access network [!]
+  - Granted privilege
+  - Firewall gap [!]
+  - Physical access
+**** Graph 
+ #+name: at-gain-access-to-network
+ #+header: :file graphs/at-gain-access-to-network.png
+ #+BEGIN_SRC dot :cmdline -Kdot -Tpng
+ digraph AT {
+   graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+   node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+   edge [dir=none];
+   forcelabels=true;
+
+   subgraph cluster_0 {
+      AN1 [label="Granted privilege", xlabel="AN1"];
+      AN2 [shape=doubleoctagon, label="Firewall gap", xlabel="AN2"];
+      AN3 [label="Physical access", xlabel="AN3"];      
+      AN4 [label="Access <network>", style=filled, fillcolor=red, xlabel="AN4"];
+
+      node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] orAN1, orAN2, orAN3;
+      { rank=same; orAN1, orAN2, orAN3;}
+
+      orAN1 -> orAN2 -> orAN3 [style=dashed];
+      AN1 -> orAN1 [style=dashed];
+      AN2 -> orAN2 [style=dashed];
+      AN3 -> orAN3 [style=dashed];
+      orAN2 -> AN4 [dir=full, arrowhead=normal];
+
+   }
+ }
+ #+END_SRC
+
+ #+RESULTS: at-gain-access-to-network
+ [[file:graphs/at-gain-access-to-network.png]]
+**** Table
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|      | <30>                           | <30>                           | <30>                           | <30>                           |
+| AN1  | Granted privilege              | Enforce least privilege to access the network |                                |                                |
+| AN2  | Firewall gap                   | Proper rule design, automated configuration management | Intrusion detection, rule changes detection | Dynamic rule management        |
+| AN3  | Physical access either to wireless or wired network | Strict devices and services inventory control | Devices or services inventory changes detection | Isolate, remove and clean      |
+| AN4  | Access <network>               | Access control, configuration and inventory management | Intrusion detection, detect atypical communication or host behaviour, inventory and configuration changes | Isolate, remove and clean      |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+*** Access host
+**** Tree
+- Access host [*]
+  - Granted privilege
+  - Run code on host [!]
+    - Access network [!]
+**** Graph 
+ #+name: at-gain-access-to-host
+ #+header: :file graphs/at-gain-access-to-host.png
+ #+BEGIN_SRC dot :cmdline -Kdot -Tpng
+ digraph AT {
+   graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+   node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+   edge [dir=none];
+   forcelabels=true;
+
+   subgraph cluster_0 {
+      AH1 [label="Granted privilege", xlabel="AH1"];
+      AH2 [shape=doubleoctagon, label="Access network", xlabel="AH2"];
+      AH3 [shape=doubleoctagon, label="Run code on\nhost", xlabel="AH3"];
+      AH4 [label="Access <host>", style=filled, fillcolor=red, xlabel="AH4"];
+
+      node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] orAH1, orAH2, orAH3;
+      { rank=same; orAH1, orAH2, orAH3;}
+
+      orAH1 -> orAH2 -> orAH3 [style=dashed];
+      AH1 -> orAH1  [style=dashed, weight=1000];
+      AH2 -> AH3 -> orAH3 [weight=1000];
+      orAH2 -> AH4 [dir=full, arrowhead=normal];
+   }
+ }
+ #+END_SRC
+
+ #+RESULTS: at-gain-access-to-host
+ [[file:graphs/at-gain-access-to-host.png]]
+**** Table
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|      | <30>                           | <30>                           | <30>                           | <30>                           |
+| AH1  | Granted privilege              | Enforce least privilege to access the host |                                |                                |
+| AH2  | Access network                 | Access control, proper patch and configuration management | Intrusion detection, detect atypical communication or host behaviour, configuration changes | Detect source, isolate, clean and update host |
+| AH3  | Run code on host in the network | Establish trust in vendor and standards, enhanced access control, testing, education | HW and SW excecution monitoring, detect anomalies, vulnerabilities monitoring | Manage HW and SW deployment and updates, mitigate consequences |
+| AH4  | Access host                    | Proper patch management, access control | Intrusion detection, detect atypical communication or host behaviour, configuration changes, anomaly detection, integriity changes | Detect source, isolate, clean and update host |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+*** Access host console
+**** Tree
+- Access <host> console [*]
+  - Physical access
+  - Get remote console [!]
+    - Access network [!]
+**** Graph 
+
+ #+name: at-gain-access-to-host-console
+ #+header: :file graphs/at-gain-access-to-host-console.png
+ #+BEGIN_SRC dot :cmdline -Kdot -Tpng
+ digraph AT {
+   graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+   node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+   edge [dir=none];
+   forcelabels=true;
+
+   subgraph cluster_0 {
+      AC1 [label="Physical access", xlabel="AC1"];
+      AC2 [shape=doubleoctagon, label="Access host\nnetwork", xlabel="AC2"];
+      AC3 [shape=doubleoctagon, label="Get remote console", xlabel="AC3"];
+      AC4 [label="Access <host>\nconsole", style=filled, fillcolor=red, xlabel="AC4"];
+
+      node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] orAC1, orAC2, orAC3;
+      { rank=same; orAC1, orAC2, orAC3;}
+
+      orAC1 -> orAC2 -> orAC3 [style=dashed];
+      AC1 -> orAC1  [style=dashed, weight=1000];
+      AC2 -> AC3 -> orAC3 [weight=1000];
+      orAC2 -> AC4 [dir=full, arrowhead=normal];
+   }
+ }
+ #+END_SRC
+
+ #+RESULTS: at-gain-access-to-host-console
+ [[file:graphs/at-gain-access-to-host-console.png]]
+**** Table
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|      | <30>                           | <30>                           | <30>                           | <30>                           |
+| AC1  | Physical access to the host console | Physical access control measures | Link physical access control with application access control, detect anomalies in usage | Disable console access         |
+| AC2  | Access host network            | Access control, proper patch and configuration management | Intrusion detection, detect atypical communication or host behaviour, configuration changes | Detect source, isolate, clean and update host |
+| AC3  | Get remote console on local terminal | Limit remote console access on the host | Intrusion detection, detect remote communication | Disable console access         |
+| AC4  | Access host console            | Proper patch management, physical and cyber access control | Intrusion detection, detect atypical communication or host behaviour, configuration changes, anomaly detection, integrity changes | Detect source, isolate, clean and update host, disable console access |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+ 
+*** Run code on host
+**** Tree
+- Run code on\n<host> [*]
+  - Exploit vulnerability [va]
+    - Remote service vulnerability
+    - Firewall gap
+  - Exploit code vulnerability
+  - Supply chain
+    - Software
+      - Shipped
+      - Update during\shipment
+    - Hardware
+  - Physical access
+  - User action
+    - Intent
+    - Accident or\mislead
+
+**** Graph 
+#+name: at-run-code-on-host
+#+header: :file graphs/at-run-code-on-host.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+  subgraph cluster_0 {
+    RCOH1 [label="Shipped", xlabel="RCOH1"];
+    RCOH2 [label="Update", xlabel="RCOH2"];
+    RCOH3 [label="Software", xlabel="RCOH3"];     
+    RCOH4 [label="Hardware", xlabel="RCOH4"];     
+    RCOH5 [label="Intent", xlabel="RCOH5"];
+    RCOH6 [label="Accident or\nmislead", xlabel="RCOH6"];
+    RCOH7 [label="Remote service\nvulnerability", xlabel="RCOH7"];
+    RCOH8 [label="Exploit vulnerability", xlabel="RCOH8"];
+    RCOH9 [label="Exploit code\nvulnerability", xlabel="RCOH9"];
+    RCOH10 [label="Supply chain", xlabel="RCOH10"];
+    RCOH11 [label="Physical access", xlabel="RCOH11"];
+    RCOH12 [label="User action", xlabel="RCOH12"];
+#    RCOH13 [shape=doubleoctagon, label="Deploy malware", xlabel="RCOH13"];
+    RCOH13 [label="Run code on\n<host>", style=filled, fillcolor=red, xlabel="RCOH13"];
+
+    node [shape=point, width=.001] orRCOH1, orRCOH2, orRCOH3;
+    {rank=same; orRCOH1, orRCOH2, orRCOH3;}
+
+    orRCOH1 -> orRCOH2 -> orRCOH3 [style=dashed];
+    RCOH1 -> orRCOH1 [style=dashed, weight=1000];
+    RCOH2 -> orRCOH3 [style=dashed, weight=1000];
+    orRCOH2 -> RCOH3 [weight=1000];
+
+    node [shape=point, width=.001] orRCOH5
+    {RCOH3, RCOH4} -> orRCOH5 [style=dashed];
+    orRCOH5 -> RCOH10 [weight=1000];
+
+    node [shape=point, width=.001] orRCOH7, orRCOH8, orRCOH9;
+    {rank=same; orRCOH7, orRCOH8, orRCOH9;}
+
+    orRCOH7 -> orRCOH8 -> orRCOH9 [style=dashed];
+    RCOH5 -> orRCOH7 [style=dashed, weight=1000];
+    RCOH6 -> orRCOH9 [style=dashed, weight=1000];
+    orRCOH8 -> RCOH12 [weight=1000];
+
+#    node [shape=point, width=.001] orRCOH10, orRCOH11, orRCOH12, orRCOH13, orRCOH14, orRCOH15, orRCOH16;
+#    {rank=same; orRCOH10, orRCOH11, orRCOH12, orRCOH13, orRCOH14, orRCOH15, orRCOH16;}
+    node [shape=point, width=.001] orRCOH10, orRCOH11, orRCOH12, orRCOH13, orRCOH14;
+    {rank=same; orRCOH10, orRCOH11, orRCOH12, orRCOH13, orRCOH14;}
+
+#    orRCOH10 -> orRCOH11 -> orRCOH12 -> orRCOH13 -> orRCOH14 -> orRCOH15 -> orRCOH16 [style=dashed];
+    orRCOH10 -> orRCOH11 -> orRCOH12 -> orRCOH13 -> orRCOH14 [style=dashed];
+    RCOH7 -> RCOH8; 
+    RCOH8 -> orRCOH10 [style=dashed, weight=1000];
+    RCOH9 -> orRCOH11 [style=dashed, weight=1000];
+    RCOH10 -> orRCOH12 [style=dashed, weight=1000];
+    RCOH11 -> orRCOH13 [style=dashed, weight=1000];
+    RCOH12 -> orRCOH14 [style=dashed, weight=1000];
+#    RCOH13 -> orRCOH16 [style=dashed, weight=1000];
+    orRCOH12 -> RCOH13 [dir=full, arrowhead=normal, weight=1000];
+  }
+}
+#+END_SRC
+
+#+RESULTS: at-run-code-on-host
+[[file:graphs/at-run-code-on-host.png]]
+
+**** Table
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node   | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|        | <30>                           | <30>                           | <30>                           | <30>                           |
+| RCOH1  | Software as shipped            | Establish trust in software vendor and/or evaluation standard, check source code, validate implementation | Monitor operation according to specification, detect anomalies | Disable software usage, revert to other solutions |
+| RCOH2  | Existing software update       | Establish trust in software vendor, check source code, validate implementation | Detect chnages in behaviour    | Roll back the updates          |
+| RCOH3  | Software supplied              | Establish trust in software vendor and/or evaluation standard, check source code, validate implementation | Monitor operation according to specification, detect anomalies | Disable software usage, revert to other solutions |
+| RCOH4  | Hardware as shipped            | Establish trust in hardware vendor and/or evaluation standard, check and validate HW design | Monitor operation according to specification, detect anomalies | Disable hardware usage, replace with other hardware |
+| RCOH5  | Intentionally run code         | Fine grain access control, least privilege | Detect atypical usage, monitor logs | Stop process, disable account, revoke privileges |
+| RCOH6  | Accident or misleading into running the code | Educate users                  | Detect atypical usage, monitor logs | Stop process, warn user        |
+| RCOH7  | Remote vulnerability exists    | Patch management, penetration testing | Continuous vulnerability update monitoring | Update the system, sanbox the service, limit access |
+| RCOH8  | Exploit remote vulnerability   | Harden OS, OS protections      | Detect atypical usage, monitor logs, monitor excecution paths | Mitigate the consequences, update the system, confine the service, limit access |
+| RCOH9  | Exploit existing code vulnerability, for example by malicious imput | Trust in software vendor, check source code, validate implementation | Detect atypical usage, monitor logs, monitor excecution paths | Mitigate the consequences, update the system, confine the service, limit access |
+| RCOH10 | Supply chain                   | Check implementation according to the vendor specification | Detect anomalies, differences to specification, remote communication | Replace the software or hardware, roll back updates |
+| RCOH11 | Physical access to the host, console | Physical protection, limit console and inputs accessibility, BIOS access control | Physical sensors, access control, detect atypical use | Mitigate the consequences, revoke access |
+| RCOH12 | Actions run with user privileges | Fine grain access control, least privilege | Detect atypical usage, monitor logs, monitor excecution paths | Stop process, disable account, revoke privileges |
+| RCOH13 | Run code on <host>             | Establish trust in vendor and standards, enhanced access control, testing, education | HW and SW excecution monitoring, detect anomalies, vulnerabilities monitoring | Manage HW and SW deployment and updates, mitigate consequences |
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+
+*** Extract data
+**** Tree
+- Extract <data> [*]
+  - Search for data
+    - Elevate process priviledges [!]
+      - Access host in the network [!]
+  - Malware extract data
+    - Deploy malware [!]
+
+**** Graph
+ #+name: at-extract-data
+ #+header: :file graphs/at-extract-data.png
+ #+BEGIN_SRC dot :cmdline -Kdot -Tpng
+ digraph AT {
+   graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+   node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+   edge [dir=none];
+
+   subgraph cluster_0 {
+      ED1 [shape=doubleoctagon, label="Deploy malware", xlabel="ED1"];
+      ED2 [label="Malware extracts data", xlabel="ED2"];
+      ED3 [shape=doubleoctagon, label="Access host in\nthe network", xlabel="ED3"];
+      ED4 [shape=doubleoctagon, label="Elevate process\nprivileges", xlabel="ED4"];
+      ED5 [label="Search for data", xlabel="ED5"];
+      ED6 [label="Extract <data>", style=filled, fillcolor=red, xlabel="ED6"];
+
+      node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] orED1;
+
+      ED1 -> ED2 [weight=1000];
+      ED3 -> ED4 -> ED5 [weight=1000];
+      ED2 -> orED1 [style=dashed];
+      ED5 -> orED1 [style=dashed];
+      orED1 -> ED6 [dir=full, arrowhead=normal];
+   }
+ }
+ #+END_SRC
+
+ #+RESULTS: at-extract-data
+ [[file:graphs/at-extract-data.png]]
+
+**** Table
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|      | <30>                           | <30>                           | <30>                           | <30>                           |
+| ED1  | Deploy malware                 | Educate employees and security personnel, usage policies and enforcement mechanisms, proper management | Intrusion detection, antivirus on host and in network, emit events | Block and isolate host or device, store evidence |
+| ED2  | Malware extracts target data on host or in the network | Sandboxing, virtualization, OS permissions, encryption | Detect malware, atypical communication or software behaviour | Remove malware, block host     |
+| ED3  | Access host in the network     | Access control, proper patch and configuration management | Intrusion detection, detect atypical communication or host behaviour, configuration changes | Detect source, isolate, clean and update host |
+| ED4  | Elevate attacker process privileges | Trust but verify, fain grain access control, OS protections, improve interfaces | Events monitoring, monitor process excecution, detect anomalies | Stop, confine the proces, raise alarm, store evidence |
+| ED5  | Search for data in network, hosts, peripherals, backups, repositories | Sandboxing, virtualization, OS permissions, encryption | Detect atypical behaviour in the network on hosts | Detect atypical behavour source |
+| ED6  | Extract <data>                 | Educate employees and security personnel, access control, policies, enforcement | Intrusion detection, configuration management, atypical behaviour detection | Detect source, isolate, clean and update, store evidence |
+|------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+*** Run code on client
+**** Tree
+- Run code on\n<client> [*]
+  - "What is this?"
+  - Watering hole\nattacks
+    - Website
+    - Filesharing
+    - Other
+  - Convince to open\nexploit doc/link
+  - Access as server\nRun code on\host [!]
+  - Convince to run\ncode
+    - Extra functionality\nor gains
+    - Tricked into running
+**** Graph 
+#+name: at-run-code-on-client
+#+header: :file graphs/at-run-code-on-client.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+  subgraph cluster_0 {
+    RCOC3 [label="Other", xlabel="RCOC3"];
+    RCOC2 [label="Filesharing", xlabel="RCOC2"];
+    RCOC1 [label="Website", xlabel="RCOC1"];     
+    RCOC4 [label="Tricked into\nrunning", xlabel="RCOC4"];     
+    RCOC5 [label="Extra functionality\nor gains", xlabel="RCOC5"];
+    RCOC6 [label="\"What is this?\"", xlabel="RCOC6"];
+    RCOC7 [label="Watering hole\nattacks", xlabel="RCOC7"];
+    RCOC8 [label="Convince to open\nexploit doc/link", xlabel="RCOC8"];
+    RCOC9 [shape=doubleoctagon, label="Act as server\nRun code on\nhost", xlabel="RCOC9"];
+    RCOC10 [label="Convince to run\ncode", xlabel="RCOC10"];
+    RCOC11 [label="Run code on\n<client>", style=filled, fillcolor=red, xlabel="RCOC11"];
+
+    node [shape=point, width=.001] orRCOC5, orRCOC6;
+    {RCOC4, RCOC5} -> orRCOC5 [style=dashed];
+    orRCOC5 -> RCOC10 [weight=1000];
+
+    {RCOC1, RCOC2, RCOC3} -> orRCOC6 [style=dashed];
+    orRCOC6 -> RCOC7 [weight=1000];
+
+
+    node [shape=point, width=.001] orRCOC7, orRCOC8, orRCOC9, orRCOC10, orRCOC11;
+    {rank=same; orRCOC7, orRCOC8, orRCOC9, orRCOC10, orRCOC11;}
+    orRCOC7 -> orRCOC8 -> orRCOC9 -> orRCOC10 -> orRCOC11 [style=dashed];
+    RCOC6 -> orRCOC7 [style=dashed, weight=1000];
+    RCOC7 -> orRCOC8 [style=dashed, weight=1000];
+    RCOC8 -> orRCOC9 [style=dashed, weight=1000];
+    RCOC9 -> orRCOC10 [style=dashed, weight=1000];
+    RCOC10 -> orRCOC11 [style=dashed, weight=1000];
+    orRCOC9 -> RCOC11 [dir=full, arrowhead=normal, weight=1000];
+  }
+}
+#+END_SRC
+
+#+RESULTS: at-run-code-on-client
+[[file:graphs/at-run-code-on-client.png]]
+**** Table
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node   | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|        | <30>                           | <30>                           | <30>                           | <30>                           |
+| RCOC1  | Malicious code comes from a website | Educate users, antivirus, sandboxed excecution | ID or antivirus events, anomalies detection | Disconect from the network, desinfect the client |
+| RCOC2  | Malicious code comes from a filesharing site | Educate users, antivirus, sandboxed excecution | ID or antivirus events, anomalies detection | Disconect from the network, desinfect the client |
+| RCOC3  | Malicious code comes from other type of site | Educate users, antivirus, sandboxed excecution | ID or antivirus events, anomalies detection | Disconect from the network, desinfect the client |
+| RCOC4  | User is tricked into running the code, filepath attacks | Educate users, antivirus, sandboxed excecution | Antivirus events, anomalies detection | Disconect from the network, desinfect the client |
+| RCOC5  | Extra functionality offered by the code | Educate users, antivirus, sandboxed excecution | Antivirus events, anomalies detection | Disconect from the network, desinfect the client |
+| RCOC6  | Attack curious user via file on a file share, USB key, or other device | Educate users, antivirus, sandboxed excecution | Antivirus events, anomalies detection | Disconect from the network, desinfect the client |
+| RCOC7  | Watering hole, target specific site users with crafted files | Educate users, antivirus, sandboxed excecution | ID or antivirus events, anomalies detection | Disconect from the network, desinfect the client |
+| RCOC8  | Convince user to open a document or link, embedded scripts attack | Educate users, antivirus, sandboxed excecution | ID or antivirus events, anomalies detection | Disconect from the network, desinfect the client |
+| RCOC9  | Exploit running services on the client | Establish trust in vendor and standards, enhanced access control, testing, education | HW and SW excecution monitoring, detect anomalies, vulnerabilities monitoring | Disconect from the network, desinfect the client |
+| RCOC10 | Code seems safe to run for the user or offers promissed gains | Educate users, antivirus, sandboxed excecution | ID or antivirus events, anomalies detection | Disconect from the network, desinfect the client |
+| RCOC11 | Malicious code can be run on the client | Educate users, antivirus, sandboxed excecution | ID or antivirus events, anomalies detection | Disconect from the network, desinfect the client |
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+*** Elevation of privilege against a process
+**** Tree
+- Elevate privileges\n<process> [*]
+  - Other
+  - Insufficient authorization [ov]
+    - Call chain isuess
+    - Design issue,\nusability
+    - Cross-domain issue
+  - Static corruption
+  - Dynamic corruption [ov]
+    - Access to memory
+    - Input validation failure
+**** Graph
+#+name: at-eofp
+#+header: :file graphs/at-eofp.png
+#+BEGIN_SRC dot :cmdline -Kdot -Tpng
+digraph AT {
+  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  edge [dir=none];
+
+  subgraph cluster_0 {
+    EOFP1 [label="Call chain issues", xlabel="EOFP1"];
+    EOFP2 [label="Cross-domain issue", xlabel="EOFP2"];     
+    EOFP3 [label="Design issue,\nusability", xlabel="EOFP3"];     
+    EOFP4 [label="Access to memory", xlabel="EOFP4"];
+    EOFP5 [label="Input validation\nfailure", xlabel="EOFP5"];
+    EOFP6 [label="Other", xlabel="EOFP6"];
+    EOFP7 [label="Insuficient authorization", xlabel="EOFP7"];
+    EOFP8 [label="Static coruption", xlabel="EOFP8"];
+    EOFP9 [label="Dynamic corruption", xlabel="EOFP9"];
+    EOFP10 [label="Elevate privileges\n<process>", style=filled, fillcolor=red, xlabel="EOFP10"];
+
+    node [shape=point, width=.001] orEOFP1, orOEFP2, orOEFP3;
+
+    {EOFP1, EOFP2, EOFP3} -> orEOFP1 [style=dashed];
+    orEOFP1 -> EOFP7 [dir=full, arrowhead=normal, weight=1000];
+    {EOFP4, EOFP5} -> orEOFP2 [style=dashed];
+    orEOFP2 -> EOFP9 [dir=full, arrowhead=normal, weight=1000];
+
+    node [shape=point, width=.001] orEOFP3, orEOFP4, orEOFP5, orEOFP6, orEOFP7;
+    {rank=same; orEOFP3, orEOFP4, orEOFP5, orEOFP6, orEOFP7;}
+    orEOFP3 -> orEOFP4 -> orEOFP5 -> orEOFP6 -> orEOFP7  [style=dashed];
+    EOFP6 -> orEOFP3 [style=dashed, weight=1000];
+    EOFP7 -> orEOFP4 [style=dashed, weight=1000];
+    EOFP8 -> orEOFP6 [style=dashed, weight=1000];
+    EOFP9 -> orEOFP7 [style=dashed, weight=1000];
+    orEOFP5 -> EOFP10 [dir=full, arrowhead=normal, weight=1000];
+
+  }
+}
+#+END_SRC
+
+#+RESULTS: at-eofp
+[[file:graphs/at-eofp.png]]
+**** Table
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+| Node   | Explanation                    | Design mitigation              | Detection                      | Run-time mitigation            |
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
+|        | <30>                           | <30>                           | <30>                           | <30>                           |
+| EOFP1  | Caller, calle or subprocess dependency, malicious inputs, tamper with memory | Input validation, API constraints | Events monitoring, detect anomalies | Limit access, raise alarm, store evidence |
+| EOFP2  | Access control is done per domain boundaries, usually to broad or weakly defined | Fine grain access control      |                                |                                |
+| EOFP3  | Weak and hard to use design can prevent users to use the APIs properly | Improve usability of security interfaces, educate users | Detect sloppy usage            | Warn users, mitigate consequences |
+| EOFP4  | Local user or administrator can access process memory and tamper with it | Separate process accounts per concern, virtualisation | Monitor process excecution, detect anomalies | Stop, confine the proces, raise alarm, store evidence |
+| EOFP5  | Input can alter control flow (e.g., via stack smashing or heap overflow) | Input validation, OS protections | Events monitoring, monitor process exceution, detect anomalies | Stop, confine the proces, raise alarm, store evidence |
+| EOFP6  | Consideres issues beyond process boundaries, subprocesses, spoofing | OS protections                 | Events monitoring, detect anomalies | Stop, confine the proces, raise alarm, store evidence |
+| EOFP7  | Authorizations issues          | Trust but verify, fain grain access control, improve interfaces | Events monitoring, detect anomalies | Limit access, raise alarm, store evidence, mitigate consequences |
+| EOFP8  | Use any means to bypass access control mechanisms protecting the program static variables/inputs | OS protections, read only access, encrypt at rest | Events monitoring, detect anomalies | Limit access, raise alarm, store evidence, mitigate consequences |
+| EOFP9  | Access process memoy or alter its program flow | Separation of concerns, input validation, OS protections | Events monitoring, monitor process exceution, detect anomalies | Stop, confine the proces, raise alarm, store evidence |
+| EOFP10 | Elevate the previledges of the process | Trust but verify, fain grain access control, OS protections, improve interfaces | Events monitoring, monitor process exceution, detect anomalies | Stop, confine the proces, raise alarm, store evidence |
+|--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
