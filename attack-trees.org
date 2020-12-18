@@ -37,6 +37,16 @@ visualize the tree properly, see examples within the document:
 * Attack trees
 ** Common Scenarios
 *** Glaze ice
+**** Description
+
+Glaze or glaze ice, also called glazed frost, is a smooth, transparent
+and homogeneous ice coating occurring when freezing rain or drizzle
+hits a surface.  Glaze forms when the upper air temperatures are high
+and drops of rain fell into lower air layers with very low
+temperature. The water droplets cool below zero in the air and froze
+immediately when below zero objects are hit. A coating of ice is
+formed, which is very hazardous when it gets thick.
+
 **** Tree 
 
 - Sleet [ah*]
@@ -86,6 +96,13 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_
 |-------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Set explosion
+**** Description
+
+Explosives can be used to bring down power line poles, damage or
+destroy transformers, switching fields or even dams. To set an
+explosion one needs to get the explosive, install it and activate it
+remotely or on site.
+
 **** Tree
 
 - Set explosion <at> [ah*]
@@ -176,6 +193,15 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3_0", "or_
 |---------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Obtain <physical credentials> 
+**** Description
+
+Physical credentials are elements of access control like keys,
+proximity cards, swipe cards or smart cards. Nowadays even smart
+phones are used as a credential. A number of ways exist to obtain the
+credentials, from simply applying for one, if the credential issuing
+policies and procedures are weak to extorting the credential from an
+employee with right access rights for the planned assault.
+
 **** Tree
 - Obtain\n<physical credentials> [*]
   - Social engineer
@@ -239,6 +265,17 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_
 |--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Gather intelligence about <physical item> 
+**** Description
+
+Knowing the target the attacker is aiming at to attack is of utmost
+importance for the attacker. To gather intelligence about the physical
+items one can use internal documents, inside the physical premises
+observations, observations from the outside the premises and
+information obtainable on-line. All the information can be fused to
+create a picture of the site and to maximize the chances of the attack
+to succeed. Many of these activities give the defender a chance to
+detect a possibility of the attack.
+
 **** Tree
 
 - Gather intelligence\nabout <physical item> [*] 
@@ -583,6 +620,11 @@ node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_4.2.2_0",
 |--------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Break into <room or building>
+**** Description
+
+There are a number of possibilities to break into a room or building
+besides most common of breaking through the window or doors.
+
 **** Tree
 - Break into\n<room or building> [ah*]
   - Bring tools
@@ -713,6 +755,11 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2.5_0", "o
 |--------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Get into <room or building>
+**** Description
+
+To get into the room one needs either access credentials or needs to
+break into the room.
+
 **** Tree
 - Get into\n<room or building> [*]
   - Get access credentials
@@ -776,6 +823,12 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1_0", "or_
 |----------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Get into <site region>
+**** Description
+
+Getting into the site region is possible in a number of ways: through
+the main gate pass the guard, if any, over, through or below the fence
+or through natural passages.
+
 **** Tree
 - Get into <site region> [*]
   - Go through main door [ov]
@@ -952,6 +1005,13 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_5_0", "or_
 |------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Obtain paper documents <from documents store>
+**** Description
+
+To obtain paper documents from a document store one needs to find the
+documents in the store and the either take them or copy them. Taking
+them leaves a trace that can be detected if the store is checked
+regularly.
+
 **** Tree
 
 - Obtain paper\ndocuments <from documents\nstore> [ah*] 
@@ -1019,6 +1079,15 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1_0", "or_
 |------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Obtain sensitive data from site
+**** Description
+
+The common physical attack tree presents a case of an attacker
+obtaining sensitive data from a site. Digital data or paper documents
+can be taken. Digital data on various media is at jeopardy and needs
+to be properly protected not to be lost. Digital documents either in
+lockers or exposed on the walls can give a lot of information to
+prying eyes.
+
 **** Tree
 
 - Obtain sensitive\ndata [*]
@@ -1139,6 +1208,17 @@ node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_2.2_0"
 |------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Get a drone
+**** Description
+
+The get a drone attack tree presents some possible ways to obtain a
+drone. Many drones can be bought on-line or in the shops as
+of-the-shelf components. Some can be built from parts, parts can be
+even printed and the drone assembled locally. In many cases embedded
+software for operating a drone is open source and widely available. It
+is not uncommon that drones get stolen from organizations or that they
+are lost in operation, get found and reused later for malicious
+purposes.
+
 **** Tree
 
 - Get a drone [oh*]
@@ -1251,6 +1331,19 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3_0", "or_
 |-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Fine tune drone
+**** Description
+
+Commercial of-the-shelf drones often comes with a number of
+limitations, limiting the drone speed, height the drone can reach,
+distance to fly before the drone triggers return to home
+function. Some limitations are related to non-fly zones specified by
+regulation and are enforced wither in software or in hardware. Most of
+the limitations can be »hacked« and circumvent easily. Another way to
+make a drone more undetectable is either to reduce the noise of the
+drone or to make it less detectable by video or radar methods, for
+example by painting it or decorating it in a way to be recognized
+harder by detection algorithms.
+
 **** Tree
 
 - Fine tune\ndrone [ah*]
@@ -1330,6 +1423,13 @@ node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_1_0", 
 |-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Prepare a drone with explosive
+**** Description
+
+To prepare a drone with explosive one needs to get a suitable drone,
+explosive and detonator. The explosive and detonator needs to be
+coupled and mounted on the drone. It is very likely that such drone
+will be fine-tuned for best performance.
+
 **** Tree
 
 - Prepare drone\nwith explosive [ah*]
@@ -1442,6 +1542,15 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3.2_0", "o
 | PDWE_3.2.3      | Wi-Fi controlled                | Provide Wi-Fi jamming mitigation system. Control close peremiter. | Detect new Wi-Fi access points close to the area. | Jam/DoS Wi-Fi communication,    |
 |-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 *** Fly to destination
+**** Description
+
+The fly to destination attack tree presents adversary tasks to reach
+the destination of the fly. The drone needs to be launched and
+navigated towards the destination. During the flight the drone needs
+to avoid possible obstacles on the flying route. Important distinction
+for detecting and mitigating the drone activity is teh wayy as the
+drone is navigated, either by operator or based on pre-defined path.
+
 **** Tree 
 
 - Fly to <destination> [ah*]
@@ -1514,6 +1623,14 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2_0", "or_
 - [[file:~/delo/org/data/projects/Defender/WP1/references/p17-nguyen-1.pdf][Investigating Cost-effective RF-based Detection of Drones]]
 
 *** Reach area
+**** Description
+
+The reach area attack tree presents adversary possibilities to access
+certain location. Only few options are presented, more could be
+possible, like truck, train, bus, underwater carrier, etc. Each option
+presents an unique way to reach the destination, detect the
+approaching of the adversary and to mitigate the action.
+
 **** Tree 
 
 - Reach <area> [*]
@@ -1566,6 +1683,13 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_
 |-----------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Social engineering 
+**** Description
+
+The threat agent uses techniques of social engineering to persuade the
+target to perform certain actions in the system that benefit the
+agent. Typical actions are to issue or reveal credentials to access
+the system.
+
 **** Tree
 - Social engineer [ah*]
   - Pose as trustworthy
@@ -1630,6 +1754,14 @@ node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_2_0", 
 | SE6  | Social engineer <target>       | Define company policies and enforcement, raise employees and contractors awarnes, education | Penetration test               |                                |
 |------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 *** Obtain password
+**** Description
+
+Often systems are protected with simple user name and password as
+credentials. There are many ways to obtain the password, from cracking
+them from extracted password data, obtaining them directly from the
+network, through resetting the password, social engineering or
+blackmailing a system administrator.
+
 **** Tree
 - Obtain password for\n<system function> [oh*]
   - Crack password
@@ -1696,6 +1828,20 @@ node [shape=octagon, height=.0001, width=.0001, penwidth=0, label=""] "or_2_0", 
 | OP9  | Obtain password for <system or function> | Strong passwords, procedures, education, hardened systems | Detect atypical usage, prevent malware | Lock acount, remove malware    |
 |------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 *** Obtain credentials for system or function
+**** Description
+
+Authentication information is used to verify an identity claimed by or
+an entity [4]. The authentication information can exist or be derived
+from something that entity knows, like password, something that entity
+possesses, like token or key, or something that entity is, for example
+the entity biometric features.
+
+Obtaining the credentials for a system or function means obtaining,
+forge or misuse the authentication information of an entity. Sometimes
+more than one authentication information is used to authenticate and
+entity. In such multi-factor authentication cases the threat agent
+needs to do multiple steps to obtain all authentication information.
+
 **** Tree
 - Obtain credential for <system function> [oh*]
   - Obtain password [!]
@@ -1755,6 +1901,15 @@ digraph AT {
 | OC7  | Obtain credential for <system or function> | Improve access control, policies and enforcement, education | Intrusion detection, penetration testing, atypical usage detection | Rewoke authorizations, isolate, clean and update, store evidence |
 |------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 *** Deploy malware
+**** Description
+
+Deploying malware provides a number of opportunities to an
+attacker. Running the code behind the perimeter enables the attacker
+possibility to extract information, build a communication channel or
+to control attacked host. Malware can be deployed vi a mobile device,
+by infected peripheral inserted into a host and intentional or
+unintentional install by the user.
+
 **** Tree
 - Deploy malware to <host> [oh*]
   - Compromised mobile device
@@ -1804,6 +1959,20 @@ digraph AT {
 | DM5  | Deploy malware to\n<network> or <host> | Educate employees and security personnel, usage policies and enforcement mechanisms, proper management | Intrusion detection, antivirus on host and in network, emit events | Block and isolate host or device, store evidence |
 |------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 *** Reconfigure firewall
+**** Description
+
+A firewall is network access control element controlling access on the
+network perimeter. Access either in or out of the network can be
+controlled. To break into the network or to lower the guards on exit
+traffic the firewall can be reconfigured to allow to pass certain
+traffic or to stop blocking access to vulnerable ports.
+
+There are a number of possibilities to reconfigure the firewall. One
+is to access the firewall while being able to run the code on it and
+elevate the privileges of the process. Another is to obtain the
+credentials from credentials holder to reconfigure. On the other side,
+intentional or unintentional reconfiguration is possible.
+
 **** Tree
 - Reconfigure firewall [oh!]
   - Access firewal [!]
@@ -1854,6 +2023,13 @@ digraph AT {
 | RF5  | Reconfigure <firewall>         | Add firewall                   | Detect new network or subnetwork configurations | Add firewall                   |
 |------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 *** Firewall Gap
+**** Description
+
+A firewall gap is a consequences of misconfigured access control
+device, no access control at all, reconfigured firewall due to
+malicious attacker action or left behind stale rule, allowing access
+at some time but the rule should not be allowed any more.
+
 **** Tree
 - Firewall gap [oh!]
   - Misconfigured firewall
@@ -1903,6 +2079,14 @@ digraph AT {
 | FG5  | <Firewall> gap                 | Proper rule design, automated configuration management | Intrusion detection, rule changes detection | Dynamic rule management         |
 |------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 *** Access network
+**** Description
+
+Accessing the network is often a good start for the attacker. The
+network can be access either due to granted privileges, firewall gap
+or physical access. For example, in some cases, the network can be
+access through a physical attack by bridging an air gap between victim
+and the attacker.
+
 **** Tree
 - Access network [!]
   - Granted privilege
@@ -1950,6 +2134,14 @@ digraph AT {
 | AN4  | Access <network>               | Access control, configuration and inventory management | Intrusion detection, detect atypical communication or host behaviour, inventory and configuration changes | Isolate, remove and clean      |
 |------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 *** Access host
+**** Description
+
+Accessing the host requires accessing the network first. The host is
+accessed when the adversary can run a code on it. The attacker process
+on the host could need elevated privileges to access all the
+information on the host to access promiscuously the network traffic or
+run privileged processes.
+
 **** Tree
 - Access host [*]
   - Granted privilege
@@ -1995,6 +2187,13 @@ digraph AT {
 | AH4  | Access host                    | Proper patch management, access control | Intrusion detection, detect atypical communication or host behaviour, configuration changes, anomaly detection, integriity changes | Detect source, isolate, clean and update host |
 |------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 *** Access host console
+**** Description
+
+Accessing the host console requires accessing the network and
+obtaining the console remotely or physically access the host. When the
+console has been accessed the attacker can log into the host or
+application with proper credentials.
+
 **** Tree
 - Access <host> console [*]
   - Physical access
@@ -2042,6 +2241,17 @@ digraph AT {
 |------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
  
 *** Run code on host
+**** Description
+
+The goal of this attack tree is to run code on a host. Attacker can
+succeed in a number of ways, code can be run intentionally or
+unintentionally by user, physical access can be used to get access to
+the host console and run code from there, or run the code during the
+boot process from inserted media/device, code can be deployed through
+the supply chain as a new code or a patch, existing code vulnerability
+can be used to run the code, or a remote vulnerability can be
+exploited to achieve the goal.
+
 **** Tree
 - Run code on\n<host> [*]
   - Exploit vulnerability [va]
@@ -2146,6 +2356,22 @@ digraph AT {
 |--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 
 *** Extract data
+**** Description
+
+Running code on a client is different than on the host. On host, the
+code is only seldom run by end users, for example system
+administrator. Though the attack, as is presented below, could be as
+easily performed by administrator as by ordinary user.
+
+The users can be curious and will click on wrong links or open
+documents they believe contain information they are interested
+in. They can be tempted to open a document or a link in an email or
+documentation. A watering hole attack can be launched to attack a
+particular group with a targeted attack. OS tricks like hidden file
+paths can be used to convince the user to run the code. The client
+host can run as a server so all the attacks as were discussed in the
+previous section are also possible.
+
 **** Tree
 - Extract <data> [*]
   - Search for data
@@ -2198,6 +2424,18 @@ digraph AT {
 | ED6  | Extract <data>                 | Educate employees and security personnel, access control, policies, enforcement | Intrusion detection, configuration management, atypical behaviour detection | Detect source, isolate, clean and update, store evidence |
 |------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 *** Run code on client
+**** Description
+
+Extracted data from host or any other information system is of
+critical importance for the attacker. The data can be passwords,
+credentials, public and private keys, organization business
+documentation, network configurations, etc. In general, the code needs
+to be run on the host and its privileges elevated if the information
+of interest is protected by OS access control mechanisms. The code can
+then extract the data. In malware case, the tree assumes that either
+the malware is run on a client host or that the malware can provide
+elevation mechanisms by itself.
+
 **** Tree
 - Run code on\n<client> [*]
   - "What is this?"
@@ -2273,6 +2511,22 @@ digraph AT {
 | RCOC11 | Malicious code can be run on the client | Educate users, antivirus, sandboxed excecution | ID or antivirus events, anomalies detection | Disconect from the network, desinfect the client |
 |--------+--------------------------------+--------------------------------+--------------------------------+--------------------------------|
 *** Elevation of privilege against a process
+**** Description
+
+When an attacker wants run the code on the system with high privileges
+for a certain purpose, like accessing OS protected information, it
+needs to run the code with elevated privileges. To elevate the
+privileges a dynamic process corruption can be used accomplished by
+specially crafted inputs to achieve stack smashing or heap
+overflow. Sometimes local users or administrator can access the
+process and tamper with the process memory. Static corruption can be
+used to bypass access control mechanisms protecting the program
+implementation, static variables, inputs or outputs. Internal program
+access control mechanisms can be misused or tampered with. Design and
+usability issues can lead the end users, for example programmer, to
+avoid hard to use security features, which can end in insufficient
+authorization. The attacker can misuse such "features".
+
 **** Tree
 - Elevate privileges\n<process> [*]
   - Other
