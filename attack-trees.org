@@ -31,8 +31,8 @@ visualize the tree properly, see examples within the document:
 - *: common scenario node (when used in other trees)
 - a: and (between child nodes)
 - o: or (between child nodes, default when not specified)
-- h: align horizontally (default when not specified)
-- v: align vertically
+- h: align child nodes horizontally (default when not specified)
+- v: align child nodes vertically
 
 * Attack trees
 ** Common Scenarios
@@ -286,259 +286,259 @@ node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_
 	- Articles
     - Similar designs
 **** Graph 
-#+name: at-gather-intelligence-II
-#+header: :file graphs/at-gather-intelligence-II.png
+#+name: at-gather-intelligence
+#+header: :file graphs/at-gather-intelligence.png
 #+BEGIN_SRC dot :cmdline -Kdot -Tpng
 digraph AT {
-  graph [splines=ortho, nodesep=.4, penwidth=3, concentrate=true, style=invis, dpi=240];
-  node [shape=octagon, width=1.8, height=.9, fixedsize=true, fontsize=10, fontname="Verdana"];
+  graph [splines=ortho, nodesep=.4, ranksep=.3, penwidth=3, concentrate=true, style=invis, dpi=240];
+  node [shape=box, style=rounded, width=1.4, height=.6, fixedsize=true, fontsize=11, fontname="Verdana"];
   edge [dir=none];
 
-"POPD_0" [style=filled, fillcolor=red, label="Gather intelligence\nabout <physical item>", xlabel="POPD\n0"];
-"POPD_1" [label="Get internal\ndocumentation", xlabel="POPD\n1"];
-"POPD_1.1" [label="Access physically", xlabel="POPD\n1.1"];
-"POPD_1.1.1" [shape=doubleoctagon, label="Get access to\ndepartment", xlabel="POPD\n1.1.1"];
-"POPD_1.1.2" [label="Enter department", xlabel="POPD\n1.1.2"];
-"POPD_1.1.2.1" [label="Find document\nstore", xlabel="POPD\n1.1.2.1"];
-"POPD_1.1.2.2" [shape=doubleoctagon, label="Get access to\ndocument store", xlabel="POPD\n1.1.2.2"];
-"POPD_1.1.2.3" [shape=doubleoctagon, label="Obtain paper\ndocuments", xlabel="POPD\n1.1.2.3"];
-"POPD_1.2" [label="Through insider", xlabel="POPD\n1.2"];
-"POPD_1.2.1" [label="Threaten", xlabel="POPD\n1.2.1"];
-"POPD_1.2.2" [label="Blackmail", xlabel="POPD\n1.2.2"];
-"POPD_1.2.3" [label="Bribe", xlabel="POPD\n1.2.3"];
-"POPD_2" [label="Get inside\nobservations", xlabel="POPD\n2"];
-"POPD_2.1" [label="Get access to\nthe item", xlabel="POPD\n2.1"];
-"POPD_2.1.1" [label="As visitor", xlabel="POPD\n2.1.1"];
-"POPD_2.1.2" [label="As employee", xlabel="POPD\n2.1.2"];
-"POPD_2.2" [label="Record\nobservations", xlabel="POPD\n2.2"];
-"POPD_2.2.1" [label="Steal info", xlabel="POPD\n2.2.1"];
-"POPD_2.2.1.1" [label="Documentation", xlabel="POPD\n2.2.1.1"];
-"POPD_2.2.1.2" [label="Brochures", xlabel="POPD\n2.2.1.2"];
-"POPD_2.2.1.3" [label="Escape plans", xlabel="POPD\n2.2.1.3"];
-"POPD_2.2.2" [label="Get photos\nor videos", xlabel="POPD\n2.2.2"];
-"POPD_2.2.3" [label="Get voice\nrecordings", xlabel="POPD\n2.2.3"];
-"POPD_2.2.4" [label="Note\nprocedures", xlabel="POPD\n2.2.4"];
-"POPD_2.2.5" [label="Note details", xlabel="POPD\n2.2.5"];
-"POPD_3" [label="Get outside\nobservations", xlabel="POPD\n3"];
-"POPD_3.1" [label="Record\nobservations", xlabel="POPD\n3.1"];
-"POPD_3.1.1" [label="Get photos\nor videos", xlabel="POPD\n3.1.1"];
-"POPD_3.1.2" [label="Note procedures", xlabel="POPD\n3.1.2"];
-"POPD_3.1.3" [label="Note details", xlabel="POPD\n3.1.3"];
-"POPD_3.2" [label="Reach\nproximity", xlabel="POPD\n3.2"];
-"POPD_4" [label="Get info\nonline", xlabel="POPD\n4"];
-"POPD_4.1" [label="Find leaked\ndocuments", xlabel="POPD\n4.1"];
-"POPD_4.1.1" [label="Search", xlabel="POPD\n4.1.1"];
-"POPD_4.1.2" [label="Buy", xlabel="POPD\n4.1.2"];
-"POPD_4.2" [label="Find presentation\ndocuments", xlabel="POPD\n4.2"];
-"POPD_4.2.1" [label="Web server", xlabel="POPD\n4.2.1"];
-"POPD_4.2.1.1" [label="Photos", xlabel="POPD\n4.2.1.1"];
-"POPD_4.2.1.2" [label="Videos", xlabel="POPD\n4.2.1.2"];
-"POPD_4.2.1.3" [label="Brochures", xlabel="POPD\n4.2.1.3"];
-"POPD_4.2.2" [label="Workshops", xlabel="POPD\n4.2.2"];
-"POPD_4.2.2.1" [label="Presentations", xlabel="POPD\n4.2.2.1"];
-"POPD_4.2.2.2" [label="Articles", xlabel="POPD\n4.2.2.2"];
-"POPD_4.3" [label="Similar designs", xlabel="POPD\n4.3"];
+"N_0" [shape=box, style="rounded,filled", fillcolor=red, label="Gather intell\nigence about\n<physical item>", xlabel=<<FONT POINT-SIZE="9">N<br/>0</FONT>>];
+"N_1" [shape=box, label=rounded, label="Get internal\ndocumentation", xlabel=<<FONT POINT-SIZE="9">N<br/>1</FONT>>];
+"N_1.1" [shape=box, label=rounded, label="Access\nphysically", xlabel=<<FONT POINT-SIZE="9">N<br/>1.1</FONT>>];
+"N_1.1.1" [shape=box, style=rounded, peripheries=2, label="Get access to\ndepartment", xlabel=<<FONT POINT-SIZE="9">N<br/>1.1.1</FONT>>];
+"N_1.1.2" [shape=box, label=rounded, label="Enter\ndepartment", xlabel=<<FONT POINT-SIZE="9">N<br/>1.1.2</FONT>>];
+"N_1.1.2.1" [shape=box, label=rounded, label="Find document\nstore", xlabel=<<FONT POINT-SIZE="9">N<br/>1.1.2.1</FONT>>];
+"N_1.1.2.2" [shape=box, style=rounded, peripheries=2, label="Get access to\ndocument store", xlabel=<<FONT POINT-SIZE="9">N<br/>1.1.2.2</FONT>>];
+"N_1.1.2.3" [shape=box, style=rounded, peripheries=2, label="Obtain paper\ndocuments", xlabel=<<FONT POINT-SIZE="9">N<br/>1.1.2.3</FONT>>];
+"N_1.2" [shape=box, label=rounded, label="Through insider", xlabel=<<FONT POINT-SIZE="9">N<br/>1.2</FONT>>];
+"N_1.2.1" [shape=box, label=rounded, label="Threaten", xlabel=<<FONT POINT-SIZE="9">N<br/>1.2.1</FONT>>];
+"N_1.2.2" [shape=box, label=rounded, label="Blackmail", xlabel=<<FONT POINT-SIZE="9">N<br/>1.2.2</FONT>>];
+"N_1.2.3" [shape=box, label=rounded, label="Bribe", xlabel=<<FONT POINT-SIZE="9">N<br/>1.2.3</FONT>>];
+"N_2" [shape=box, label=rounded, label="Get inside\nobservations", xlabel=<<FONT POINT-SIZE="9">N<br/>2</FONT>>];
+"N_2.1" [shape=box, label=rounded, label="Get access to\nthe item", xlabel=<<FONT POINT-SIZE="9">N<br/>2.1</FONT>>];
+"N_2.1.1" [shape=box, label=rounded, label="As visitor", xlabel=<<FONT POINT-SIZE="9">N<br/>2.1.1</FONT>>];
+"N_2.1.2" [shape=box, label=rounded, label="As employee", xlabel=<<FONT POINT-SIZE="9">N<br/>2.1.2</FONT>>];
+"N_2.2" [shape=box, label=rounded, label="Record\nobservations", xlabel=<<FONT POINT-SIZE="9">N<br/>2.2</FONT>>];
+"N_2.2.1" [shape=box, label=rounded, label="Steal info", xlabel=<<FONT POINT-SIZE="9">N<br/>2.2.1</FONT>>];
+"N_2.2.1.1" [shape=box, label=rounded, label="Documentation", xlabel=<<FONT POINT-SIZE="9">N<br/>2.2.1.1</FONT>>];
+"N_2.2.1.2" [shape=box, label=rounded, label="Brochures", xlabel=<<FONT POINT-SIZE="9">N<br/>2.2.1.2</FONT>>];
+"N_2.2.1.3" [shape=box, label=rounded, label="Escape plans", xlabel=<<FONT POINT-SIZE="9">N<br/>2.2.1.3</FONT>>];
+"N_2.2.2" [shape=box, label=rounded, label="Get photos\nor videos", xlabel=<<FONT POINT-SIZE="9">N<br/>2.2.2</FONT>>];
+"N_2.2.3" [shape=box, label=rounded, label="Get voice\nrecordings", xlabel=<<FONT POINT-SIZE="9">N<br/>2.2.3</FONT>>];
+"N_2.2.4" [shape=box, label=rounded, label="Note\nprocedures", xlabel=<<FONT POINT-SIZE="9">N<br/>2.2.4</FONT>>];
+"N_2.2.5" [shape=box, label=rounded, label="Note details", xlabel=<<FONT POINT-SIZE="9">N<br/>2.2.5</FONT>>];
+"N_3" [shape=box, label=rounded, label="Get outside\nobservations", xlabel=<<FONT POINT-SIZE="9">N<br/>3</FONT>>];
+"N_3.1" [shape=box, label=rounded, label="Record\nobservations", xlabel=<<FONT POINT-SIZE="9">N<br/>3.1</FONT>>];
+"N_3.1.1" [shape=box, label=rounded, label="Get photos\nor videos", xlabel=<<FONT POINT-SIZE="9">N<br/>3.1.1</FONT>>];
+"N_3.1.2" [shape=box, label=rounded, label="Note procedures", xlabel=<<FONT POINT-SIZE="9">N<br/>3.1.2</FONT>>];
+"N_3.1.3" [shape=box, label=rounded, label="Note details", xlabel=<<FONT POINT-SIZE="9">N<br/>3.1.3</FONT>>];
+"N_3.2" [shape=box, label=rounded, label="Reach\nproximity", xlabel=<<FONT POINT-SIZE="9">N<br/>3.2</FONT>>];
+"N_4" [shape=box, label=rounded, label="Get info\nonline", xlabel=<<FONT POINT-SIZE="9">N<br/>4</FONT>>];
+"N_4.1" [shape=box, label=rounded, label="Find leaked\ndocuments", xlabel=<<FONT POINT-SIZE="9">N<br/>4.1</FONT>>];
+"N_4.1.1" [shape=box, label=rounded, label="Search", xlabel=<<FONT POINT-SIZE="9">N<br/>4.1.1</FONT>>];
+"N_4.1.2" [shape=box, label=rounded, label="Buy", xlabel=<<FONT POINT-SIZE="9">N<br/>4.1.2</FONT>>];
+"N_4.2" [shape=box, label=rounded, label="Find presentation\ndocuments", xlabel=<<FONT POINT-SIZE="9">N<br/>4.2</FONT>>];
+"N_4.2.1" [shape=box, label=rounded, label="Web server", xlabel=<<FONT POINT-SIZE="9">N<br/>4.2.1</FONT>>];
+"N_4.2.1.1" [shape=box, label=rounded, label="Photos", xlabel=<<FONT POINT-SIZE="9">N<br/>4.2.1.1</FONT>>];
+"N_4.2.1.2" [shape=box, label=rounded, label="Videos", xlabel=<<FONT POINT-SIZE="9">N<br/>4.2.1.2</FONT>>];
+"N_4.2.1.3" [shape=box, label=rounded, label="Brochures", xlabel=<<FONT POINT-SIZE="9">N<br/>4.2.1.3</FONT>>];
+"N_4.2.2" [shape=box, label=rounded, label="Workshops", xlabel=<<FONT POINT-SIZE="9">N<br/>4.2.2</FONT>>];
+"N_4.2.2.1" [shape=box, label=rounded, label="Presentations", xlabel=<<FONT POINT-SIZE="9">N<br/>4.2.2.1</FONT>>];
+"N_4.2.2.2" [shape=box, label=rounded, label="Articles", xlabel=<<FONT POINT-SIZE="9">N<br/>4.2.2.2</FONT>>];
+"N_4.3" [shape=box, label=rounded, label="Similar designs", xlabel=<<FONT POINT-SIZE="9">N<br/>4.3</FONT>>];
 
-subgraph "cluster_0" {
+subgraph "cluster_T0" {
 # Horizontal
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_0_0", "or_0_1", "or_0_2", "or_0_3", "or_0_4";
-"or_0_0" -> "or_0_1" -> "or_0_2" -> "or_0_3" -> "or_0_4" [style=dashed, weight=100];
-{rank=same; "or_0_0", "or_0_1", "or_0_2", "or_0_3", "or_0_4";}
-{rank=same; "POPD_1", "POPD_2", "POPD_3", "POPD_4";}
-"POPD_1" -> "or_0_0" [style=dashed, weight=200];
-"POPD_2" -> "or_0_1" [style=dashed, weight=200];
-"POPD_3" -> "or_0_3" [style=dashed, weight=200];
-"POPD_4" -> "or_0_4" [style=dashed, weight=200];
-"or_0_2" -> "POPD_0" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_0_0", "orT_0_1", "orT_0_2", "orT_0_3", "orT_0_4";
+"orT_0_0" -> "orT_0_1" -> "orT_0_2" -> "orT_0_3" -> "orT_0_4" [style=dashed, weight=100];
+{rank=same; "orT_0_0", "orT_0_1", "orT_0_2", "orT_0_3", "orT_0_4";}
+{rank=same; "N_1", "N_2", "N_3", "N_4";}
+"N_1" -> "orT_0_0" [style=dashed, weight=200];
+"N_2" -> "orT_0_1" [style=dashed, weight=200];
+"N_3" -> "orT_0_3" [style=dashed, weight=200];
+"N_4" -> "orT_0_4" [style=dashed, weight=200];
+"orT_0_2" -> "N_0" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_1" {
+subgraph "cluster_T1" {
 # Horizontal
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1_0", "or_1_1", "or_1_2";
-"or_1_0" -> "or_1_1" -> "or_1_2" [style=dashed, weight=100];
-{rank=same; "or_1_0", "or_1_1", "or_1_2";}
-{rank=same; "POPD_1.1", "POPD_1.2";}
-"POPD_1.1" -> "or_1_0" [style=dashed, weight=200];
-"POPD_1.2" -> "or_1_2" [style=dashed, weight=200];
-"or_1_1" -> "POPD_1" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_1_0", "orT_1_1", "orT_1_2";
+"orT_1_0" -> "orT_1_1" -> "orT_1_2" [style=dashed, weight=100];
+{rank=same; "orT_1_0", "orT_1_1", "orT_1_2";}
+{rank=same; "N_1.1", "N_1.2";}
+"N_1.1" -> "orT_1_0" [style=dashed, weight=200];
+"N_1.2" -> "orT_1_2" [style=dashed, weight=200];
+"orT_1_1" -> "N_1" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_1.1" {
+subgraph "cluster_T1.1" {
 # Horizontal
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1.1_0", "or_1.1_1", "or_1.1_2";
-"or_1.1_0" -> "or_1.1_1" -> "or_1.1_2" [weight=100];
-{rank=same; "or_1.1_0", "or_1.1_1", "or_1.1_2";}
-{rank=same; "POPD_1.1.1", "POPD_1.1.2";}
-"POPD_1.1.1" -> "or_1.1_0" [weight=200];
-"POPD_1.1.2" -> "or_1.1_2" [weight=200];
-"or_1.1_1" -> "POPD_1.1" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_1.1_0", "orT_1.1_1", "orT_1.1_2";
+"orT_1.1_0" -> "orT_1.1_1" -> "orT_1.1_2" [weight=100];
+{rank=same; "orT_1.1_0", "orT_1.1_1", "orT_1.1_2";}
+{rank=same; "N_1.1.1", "N_1.1.2";}
+"N_1.1.1" -> "orT_1.1_0" [weight=200];
+"N_1.1.2" -> "orT_1.1_2" [weight=200];
+"orT_1.1_1" -> "N_1.1" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_1.1.2" {
+subgraph "cluster_T1.1.2" {
 # Vertical
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1.1.2_0", "or_1.1.2_1", "or_1.1.2_2";
-"or_1.1.2_0" -> "or_1.1.2_1" -> "or_1.1.2_2" [weight=700];
-{rank=same; "POPD_1.1.2.1", "or_1.1.2_0";}
-{rank=same; "POPD_1.1.2.2", "or_1.1.2_1";}
-{rank=same; "POPD_1.1.2.3", "or_1.1.2_2";}
-"POPD_1.1.2.1" -> "or_1.1.2_0" [weight=200];
-"POPD_1.1.2.2" -> "or_1.1.2_1" [weight=200];
-"POPD_1.1.2.3" -> "or_1.1.2_2" [weight=200];
-"or_1.1.2_2" -> "POPD_1.1.2" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_1.1.2_0", "orT_1.1.2_1", "orT_1.1.2_2";
+"orT_1.1.2_0" -> "orT_1.1.2_1" -> "orT_1.1.2_2" [weight=700];
+{rank=same; "N_1.1.2.1", "orT_1.1.2_0";}
+{rank=same; "N_1.1.2.2", "orT_1.1.2_1";}
+{rank=same; "N_1.1.2.3", "orT_1.1.2_2";}
+"N_1.1.2.1" -> "orT_1.1.2_0" [weight=200];
+"N_1.1.2.2" -> "orT_1.1.2_1" [weight=200];
+"N_1.1.2.3" -> "orT_1.1.2_2" [weight=200];
+"orT_1.1.2_2" -> "N_1.1.2" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_1.2" {
+subgraph "cluster_T1.2" {
 # Vertical
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_1.2_0", "or_1.2_1", "or_1.2_2";
-"or_1.2_0" -> "or_1.2_1" -> "or_1.2_2" [style=dashed, weight=700];
-{rank=same; "POPD_1.2.1", "or_1.2_0";}
-{rank=same; "POPD_1.2.2", "or_1.2_1";}
-{rank=same; "POPD_1.2.3", "or_1.2_2";}
-"POPD_1.2.1" -> "or_1.2_0" [style=dashed, weight=200];
-"POPD_1.2.2" -> "or_1.2_1" [style=dashed, weight=200];
-"POPD_1.2.3" -> "or_1.2_2" [style=dashed, weight=200];
-"or_1.2_2" -> "POPD_1.2" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_1.2_0", "orT_1.2_1", "orT_1.2_2";
+"orT_1.2_0" -> "orT_1.2_1" -> "orT_1.2_2" [style=dashed, weight=700];
+{rank=same; "N_1.2.1", "orT_1.2_0";}
+{rank=same; "N_1.2.2", "orT_1.2_1";}
+{rank=same; "N_1.2.3", "orT_1.2_2";}
+"N_1.2.1" -> "orT_1.2_0" [style=dashed, weight=200];
+"N_1.2.2" -> "orT_1.2_1" [style=dashed, weight=200];
+"N_1.2.3" -> "orT_1.2_2" [style=dashed, weight=200];
+"orT_1.2_2" -> "N_1.2" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_2" {
+subgraph "cluster_T2" {
 # Horizontal
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2_0", "or_2_1", "or_2_2";
-"or_2_0" -> "or_2_1" -> "or_2_2" [weight=100];
-{rank=same; "or_2_0", "or_2_1", "or_2_2";}
-{rank=same; "POPD_2.1", "POPD_2.2";}
-"POPD_2.1" -> "or_2_0" [weight=200];
-"POPD_2.2" -> "or_2_2" [weight=200];
-"or_2_1" -> "POPD_2" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_2_0", "orT_2_1", "orT_2_2";
+"orT_2_0" -> "orT_2_1" -> "orT_2_2" [weight=100];
+{rank=same; "orT_2_0", "orT_2_1", "orT_2_2";}
+{rank=same; "N_2.1", "N_2.2";}
+"N_2.1" -> "orT_2_0" [weight=200];
+"N_2.2" -> "orT_2_2" [weight=200];
+"orT_2_1" -> "N_2" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_2.1" {
+subgraph "cluster_T2.1" {
 # Vertical
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2.1_0", "or_2.1_1";
-"or_2.1_0" -> "or_2.1_1" [style=dashed, weight=700];
-{rank=same; "POPD_2.1.1", "or_2.1_0";}
-{rank=same; "POPD_2.1.2", "or_2.1_1";}
-"POPD_2.1.1" -> "or_2.1_0" [style=dashed, weight=200];
-"POPD_2.1.2" -> "or_2.1_1" [style=dashed, weight=200];
-"or_2.1_1" -> "POPD_2.1" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_2.1_0", "orT_2.1_1";
+"orT_2.1_0" -> "orT_2.1_1" [style=dashed, weight=700];
+{rank=same; "N_2.1.1", "orT_2.1_0";}
+{rank=same; "N_2.1.2", "orT_2.1_1";}
+"N_2.1.1" -> "orT_2.1_0" [style=dashed, weight=200];
+"N_2.1.2" -> "orT_2.1_1" [style=dashed, weight=200];
+"orT_2.1_1" -> "N_2.1" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_2.2" {
+subgraph "cluster_T2.2" {
 # Vertical
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2.2_0", "or_2.2_1", "or_2.2_2", "or_2.2_3", "or_2.2_4";
-"or_2.2_0" -> "or_2.2_1" -> "or_2.2_2" -> "or_2.2_3" -> "or_2.2_4" [style=dashed, weight=700];
-{rank=same; "POPD_2.2.1", "or_2.2_0";}
-{rank=same; "POPD_2.2.2", "or_2.2_1";}
-{rank=same; "POPD_2.2.3", "or_2.2_2";}
-{rank=same; "POPD_2.2.4", "or_2.2_3";}
-{rank=same; "POPD_2.2.5", "or_2.2_4";}
-"POPD_2.2.1" -> "or_2.2_0" [style=dashed, weight=200];
-"POPD_2.2.2" -> "or_2.2_1" [style=dashed, weight=200];
-"POPD_2.2.3" -> "or_2.2_2" [style=dashed, weight=200];
-"POPD_2.2.4" -> "or_2.2_3" [style=dashed, weight=200];
-"POPD_2.2.5" -> "or_2.2_4" [style=dashed, weight=200];
-"or_2.2_4" -> "POPD_2.2" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_2.2_0", "orT_2.2_1", "orT_2.2_2", "orT_2.2_3", "orT_2.2_4";
+"orT_2.2_0" -> "orT_2.2_1" -> "orT_2.2_2" -> "orT_2.2_3" -> "orT_2.2_4" [style=dashed, weight=700];
+{rank=same; "N_2.2.1", "orT_2.2_0";}
+{rank=same; "N_2.2.2", "orT_2.2_1";}
+{rank=same; "N_2.2.3", "orT_2.2_2";}
+{rank=same; "N_2.2.4", "orT_2.2_3";}
+{rank=same; "N_2.2.5", "orT_2.2_4";}
+"N_2.2.1" -> "orT_2.2_0" [style=dashed, weight=200];
+"N_2.2.2" -> "orT_2.2_1" [style=dashed, weight=200];
+"N_2.2.3" -> "orT_2.2_2" [style=dashed, weight=200];
+"N_2.2.4" -> "orT_2.2_3" [style=dashed, weight=200];
+"N_2.2.5" -> "orT_2.2_4" [style=dashed, weight=200];
+"orT_2.2_4" -> "N_2.2" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_2.2.1" {
+subgraph "cluster_T2.2.1" {
 # Vertical
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_2.2.1_0", "or_2.2.1_1", "or_2.2.1_2";
-"or_2.2.1_0" -> "or_2.2.1_1" -> "or_2.2.1_2" [style=dashed, weight=700];
-{rank=same; "POPD_2.2.1.1", "or_2.2.1_0";}
-{rank=same; "POPD_2.2.1.2", "or_2.2.1_1";}
-{rank=same; "POPD_2.2.1.3", "or_2.2.1_2";}
-"POPD_2.2.1.1" -> "or_2.2.1_0" [style=dashed, weight=200];
-"POPD_2.2.1.2" -> "or_2.2.1_1" [style=dashed, weight=200];
-"POPD_2.2.1.3" -> "or_2.2.1_2" [style=dashed, weight=200];
-"or_2.2.1_2" -> "POPD_2.2.1" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_2.2.1_0", "orT_2.2.1_1", "orT_2.2.1_2";
+"orT_2.2.1_0" -> "orT_2.2.1_1" -> "orT_2.2.1_2" [style=dashed, weight=700];
+{rank=same; "N_2.2.1.1", "orT_2.2.1_0";}
+{rank=same; "N_2.2.1.2", "orT_2.2.1_1";}
+{rank=same; "N_2.2.1.3", "orT_2.2.1_2";}
+"N_2.2.1.1" -> "orT_2.2.1_0" [style=dashed, weight=200];
+"N_2.2.1.2" -> "orT_2.2.1_1" [style=dashed, weight=200];
+"N_2.2.1.3" -> "orT_2.2.1_2" [style=dashed, weight=200];
+"orT_2.2.1_2" -> "N_2.2.1" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_3" {
+subgraph "cluster_T3" {
 # Vertical
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3_0", "or_3_1";
-"or_3_0" -> "or_3_1" [weight=700];
-{rank=same; "POPD_3.1", "or_3_0";}
-{rank=same; "POPD_3.2", "or_3_1";}
-"POPD_3.1" -> "or_3_0" [weight=200];
-"POPD_3.2" -> "or_3_1" [weight=200];
-"or_3_1" -> "POPD_3" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_3_0", "orT_3_1";
+"orT_3_0" -> "orT_3_1" [weight=700];
+{rank=same; "N_3.1", "orT_3_0";}
+{rank=same; "N_3.2", "orT_3_1";}
+"N_3.1" -> "orT_3_0" [weight=200];
+"N_3.2" -> "orT_3_1" [weight=200];
+"orT_3_1" -> "N_3" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_3.1" {
+subgraph "cluster_T3.1" {
 # Vertical
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_3.1_0", "or_3.1_1", "or_3.1_2";
-"or_3.1_0" -> "or_3.1_1" -> "or_3.1_2" [style=dashed, weight=700];
-{rank=same; "POPD_3.1.1", "or_3.1_0";}
-{rank=same; "POPD_3.1.2", "or_3.1_1";}
-{rank=same; "POPD_3.1.3", "or_3.1_2";}
-"POPD_3.1.1" -> "or_3.1_0" [style=dashed, weight=200];
-"POPD_3.1.2" -> "or_3.1_1" [style=dashed, weight=200];
-"POPD_3.1.3" -> "or_3.1_2" [style=dashed, weight=200];
-"or_3.1_2" -> "POPD_3.1" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_3.1_0", "orT_3.1_1", "orT_3.1_2";
+"orT_3.1_0" -> "orT_3.1_1" -> "orT_3.1_2" [style=dashed, weight=700];
+{rank=same; "N_3.1.1", "orT_3.1_0";}
+{rank=same; "N_3.1.2", "orT_3.1_1";}
+{rank=same; "N_3.1.3", "orT_3.1_2";}
+"N_3.1.1" -> "orT_3.1_0" [style=dashed, weight=200];
+"N_3.1.2" -> "orT_3.1_1" [style=dashed, weight=200];
+"N_3.1.3" -> "orT_3.1_2" [style=dashed, weight=200];
+"orT_3.1_2" -> "N_3.1" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_4" {
+subgraph "cluster_T4" {
 # Horizontal
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_4_0", "or_4_1", "or_4_2";
-"or_4_0" -> "or_4_1" -> "or_4_2" [style=dashed, weight=300];
-{rank=same; "or_4_0", "or_4_1", "or_4_2";}
-{rank=same; "POPD_4.1", "POPD_4.2", "POPD_4.3";}
-"POPD_4.1" -> "or_4_0" [style=dashed, weight=200];
-"POPD_4.2" -> "or_4_1" [style=dashed, weight=300];
-"POPD_4.3" -> "or_4_2" [style=dashed, weight=200];
-"or_4_1" -> "POPD_4" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_4_0", "orT_4_1", "orT_4_2";
+"orT_4_0" -> "orT_4_1" -> "orT_4_2" [style=dashed, weight=100];
+{rank=same; "orT_4_0", "orT_4_1", "orT_4_2";}
+{rank=same; "N_4.1", "N_4.2", "N_4.3";}
+"N_4.1" -> "orT_4_0" [style=dashed, weight=200];
+"N_4.2" -> "orT_4_1" [style=dashed, weight=300];
+"N_4.3" -> "orT_4_2" [style=dashed, weight=200];
+"orT_4_1" -> "N_4" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_4.1" {
+subgraph "cluster_T4.1" {
 # Vertical
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_4.1_0", "or_4.1_1";
-"or_4.1_0" -> "or_4.1_1" [style=dashed, weight=700];
-{rank=same; "POPD_4.1.1", "or_4.1_0";}
-{rank=same; "POPD_4.1.2", "or_4.1_1";}
-"POPD_4.1.1" -> "or_4.1_0" [style=dashed, weight=200];
-"POPD_4.1.2" -> "or_4.1_1" [style=dashed, weight=200];
-"or_4.1_1" -> "POPD_4.1" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_4.1_0", "orT_4.1_1";
+"orT_4.1_0" -> "orT_4.1_1" [style=dashed, weight=700];
+{rank=same; "N_4.1.1", "orT_4.1_0";}
+{rank=same; "N_4.1.2", "orT_4.1_1";}
+"N_4.1.1" -> "orT_4.1_0" [style=dashed, weight=200];
+"N_4.1.2" -> "orT_4.1_1" [style=dashed, weight=200];
+"orT_4.1_1" -> "N_4.1" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_4.2" {
+subgraph "cluster_T4.2" {
 # Horizontal
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_4.2_0", "or_4.2_1", "or_4.2_2";
-"or_4.2_0" -> "or_4.2_1" -> "or_4.2_2" [style=dashed, weight=100];
-{rank=same; "or_4.2_0", "or_4.2_1", "or_4.2_2";}
-{rank=same; "POPD_4.2.1", "POPD_4.2.2";}
-"POPD_4.2.1" -> "or_4.2_0" [style=dashed, weight=200];
-"POPD_4.2.2" -> "or_4.2_2" [style=dashed, weight=200];
-"or_4.2_1" -> "POPD_4.2" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_4.2_0", "orT_4.2_1", "orT_4.2_2";
+"orT_4.2_0" -> "orT_4.2_1" -> "orT_4.2_2" [style=dashed, weight=100];
+{rank=same; "orT_4.2_0", "orT_4.2_1", "orT_4.2_2";}
+{rank=same; "N_4.2.1", "N_4.2.2";}
+"N_4.2.1" -> "orT_4.2_0" [style=dashed, weight=200];
+"N_4.2.2" -> "orT_4.2_2" [style=dashed, weight=200];
+"orT_4.2_1" -> "N_4.2" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_4.2.1" {
+subgraph "cluster_T4.2.1" {
 # Vertical
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_4.2.1_0", "or_4.2.1_1", "or_4.2.1_2";
-"or_4.2.1_0" -> "or_4.2.1_1" -> "or_4.2.1_2" [style=dashed, weight=700];
-{rank=same; "POPD_4.2.1.1", "or_4.2.1_0";}
-{rank=same; "POPD_4.2.1.2", "or_4.2.1_1";}
-{rank=same; "POPD_4.2.1.3", "or_4.2.1_2";}
-"POPD_4.2.1.1" -> "or_4.2.1_0" [style=dashed, weight=200];
-"POPD_4.2.1.2" -> "or_4.2.1_1" [style=dashed, weight=200];
-"POPD_4.2.1.3" -> "or_4.2.1_2" [style=dashed, weight=200];
-"or_4.2.1_2" -> "POPD_4.2.1" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_4.2.1_0", "orT_4.2.1_1", "orT_4.2.1_2";
+"orT_4.2.1_0" -> "orT_4.2.1_1" -> "orT_4.2.1_2" [style=dashed, weight=700];
+{rank=same; "N_4.2.1.1", "orT_4.2.1_0";}
+{rank=same; "N_4.2.1.2", "orT_4.2.1_1";}
+{rank=same; "N_4.2.1.3", "orT_4.2.1_2";}
+"N_4.2.1.1" -> "orT_4.2.1_0" [style=dashed, weight=200];
+"N_4.2.1.2" -> "orT_4.2.1_1" [style=dashed, weight=200];
+"N_4.2.1.3" -> "orT_4.2.1_2" [style=dashed, weight=200];
+"orT_4.2.1_2" -> "N_4.2.1" [dir=full, arrowhead=normal, weight=1000];
 }
 
-subgraph "cluster_4.2.2" {
+subgraph "cluster_T4.2.2" {
 # Vertical
-node [shape=octagon, height=.001, width=.1, penwidth=0, label=""] "or_4.2.2_0", "or_4.2.2_1";
-"or_4.2.2_0" -> "or_4.2.2_1" [style=dashed, weight=700];
-{rank=same; "POPD_4.2.2.1", "or_4.2.2_0";}
-{rank=same; "POPD_4.2.2.2", "or_4.2.2_1";}
-"POPD_4.2.2.1" -> "or_4.2.2_0" [style=dashed, weight=200];
-"POPD_4.2.2.2" -> "or_4.2.2_1" [style=dashed, weight=200];
-"or_4.2.2_1" -> "POPD_4.2.2" [dir=full, arrowhead=normal, weight=1000];
+node [shape=box, height=.0001, width=.0001, penwidth=0, label=""] "orT_4.2.2_0", "orT_4.2.2_1";
+"orT_4.2.2_0" -> "orT_4.2.2_1" [style=dashed, weight=700];
+{rank=same; "N_4.2.2.1", "orT_4.2.2_0";}
+{rank=same; "N_4.2.2.2", "orT_4.2.2_1";}
+"N_4.2.2.1" -> "orT_4.2.2_0" [style=dashed, weight=200];
+"N_4.2.2.2" -> "orT_4.2.2_1" [style=dashed, weight=200];
+"orT_4.2.2_1" -> "N_4.2.2" [dir=full, arrowhead=normal, weight=1000];
 }
 
 }
 #+END_SRC
 
-#+RESULTS: at-gather-intelligence-II
-[[file:graphs/at-gather-intelligence-II.png]]
+#+RESULTS: at-gather-intelligence
+[[file:graphs/at-gather-intelligence.png]]
 
 **** Table
 

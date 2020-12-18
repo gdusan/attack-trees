@@ -1,8 +1,8 @@
-- Gather intelligence\nabout <physical item> [*] 
+- Gather intell\nigence about\n<physical item> [*] 
   - Get internal\ndocumentation
-    - Access physically [ah]
+    - Access\nphysically [ah]
       - Get access to\ndepartment [!]
-      - Enter department [av]
+      - Enter\ndepartment [av]
 	- Find document\nstore
 	- Get access to\ndocument store [!]
 	- Obtain paper\ndocuments [!]
